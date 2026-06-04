@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
-import { Heebo } from "next/font/google";
+import { Arimo } from "next/font/google";
 import "./globals.css";
 
-const heebo = Heebo({
-  variable: "--font-heebo",
+const arimo = Arimo({
+  variable: "--font-arimo",
   subsets: ["hebrew", "latin"],
+  weight: ["400", "500", "600", "700"],
   display: "swap",
 });
 
