@@ -4,7 +4,6 @@ import Services from "@/components/Services";
 import About from "@/components/About";
 import Syllabus from "@/components/Syllabus";
 import Process from "@/components/Process";
-import Ethics from "@/components/Ethics";
 import Faq from "@/components/Faq";
 import LeadForm from "@/components/LeadForm";
 import Footer from "@/components/Footer";
@@ -19,7 +18,6 @@ export default function Home() {
         <About />
         <Syllabus />
         <Process />
-        <Ethics />
         <Faq />
         <LeadForm />
       </main>

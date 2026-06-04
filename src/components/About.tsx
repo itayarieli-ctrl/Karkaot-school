@@ -6,8 +6,8 @@ export default function About() {
           מי עומד מאחורי קרקע 101
         </h2>
         <p className="mt-4 max-w-3xl text-lg text-stone-700">
-          שני יזמים ומשקיעים פעילים שפועלים בשוק הקרקעות בישראל מעל לעשור.
-          הקמנו את הפלטפורמה כי הבנו שחסר בשוק מקום שמלמד באמת — בלי לדחוף מוצר.
+          שני יזמים ומשקיעים פעילים בשוק הקרקעות בישראל. הקמנו את הפלטפורמה
+          כדי להעביר הלאה את הידע והניסיון שצברנו לאורך השנים.
         </p>
 
         <div className="mt-12 grid gap-8 md:grid-cols-2">
@@ -18,8 +18,17 @@ export default function About() {
             </p>
             <p className="mt-4 leading-relaxed text-stone-700">
               משקיע ויזם נדל&quot;ן מ-2009. למד את התחום על גווני הנדל&quot;ן
-              המניב, עסקאות השבחה ומינוף. השקיע בארה&quot;ב בעסקאות השבחה בשיקגו
-              עם תשואות ממוצעות של 23% בשנה. מנהל כיום קרקעות עבור עשרות
+              המניב, עסקאות השבחה ומינוף. השקיע בארה&quot;ב בעסקאות השבחה
+              בשיקגו עם תשואות ממוצעות של 23% בשנה. מייסד ומנכ&quot;ל חברת{" "}
+              <a
+                href="https://ishadama.co.il"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-semibold text-green-900 underline hover:no-underline"
+              >
+                איש אדמה
+              </a>
+              {" "}לאיתור ושיווק קרקעות, ומנהל כיום קרקעות עבור עשרות
               משקיעים פרטיים בישראל.
             </p>
             <p className="mt-3 leading-relaxed text-stone-700">
@@ -38,25 +47,6 @@ export default function About() {
               הפך לחזון: השקעה היום משמעותה הורשה לדור הבא.
             </p>
           </article>
-        </div>
-
-        <div className="mt-10 rounded-lg border-r-4 border-amber-500 bg-amber-50 p-5 text-sm leading-relaxed text-stone-800">
-          <strong>גילוי נאות:</strong> אלעד ואיתי הם גם הבעלים של חברת{" "}
-          <a
-            href="https://ishadama.co.il"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="underline hover:no-underline"
-          >
-            איש אדמה
-          </a>
-          , העוסקת באיתור ושיווק קרקעות. הקורס, הקהילה והייעוץ של קרקע 101
-          הם פעילות נפרדת מבחינה ערכית ותפעולית. בייעוץ אישי לא נדון
-          בעסקאות שאיש אדמה היא צד בהן. ראו פירוט מלא בעמוד{" "}
-          <a href="#ethics" className="underline hover:no-underline">
-            אתיקה ושקיפות
-          </a>
-          .
         </div>
       </div>
     </section>

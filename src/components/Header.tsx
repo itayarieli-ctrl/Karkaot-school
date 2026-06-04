@@ -18,8 +18,8 @@ export default function Header() {
           <a href="#syllabus" className="hover:text-green-800">
             תוכן הקורס
           </a>
-          <a href="#ethics" className="hover:text-green-800">
-            אתיקה ושקיפות
+          <a href="#process" className="hover:text-green-800">
+            ייעוץ עסקה
           </a>
           <a href="#faq" className="hover:text-green-800">
             שאלות נפוצות

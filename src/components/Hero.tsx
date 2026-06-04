@@ -4,12 +4,12 @@ export default function Hero() {
       <div className="mx-auto max-w-6xl px-5 py-20 md:py-28">
         <div className="max-w-3xl">
           <span className="inline-block rounded-full bg-green-800/10 px-3 py-1 text-xs font-semibold text-green-900">
-            פלטפורמת לימוד בלתי תלויה לעולם הקרקעות בישראל
+            לימוד מעשי לעולם הקרקעות בישראל
           </span>
           <h1 className="mt-6 text-4xl font-extrabold leading-tight tracking-tight text-stone-900 md:text-6xl">
-            ללמוד קרקעות לעומק.
+            ללמוד קרקעות
             <br />
-            <span className="text-green-800">בלי הבטחות. עם שקיפות.</span>
+            <span className="text-green-800">ממי שעושה את זה כל יום.</span>
           </h1>
           <p className="mt-6 text-lg leading-relaxed text-stone-700 md:text-xl">
             קורס דיגיטלי, קהילת לומדים, וייעוץ אישי לעסקאות קונקרטיות —
@@ -31,10 +31,6 @@ export default function Hero() {
               מה השירותים שלנו →
             </a>
           </div>
-
-          <p className="mt-6 text-sm text-stone-500">
-            * הצטרפות לרשימה לא מחייבת ברכישה. אין דחיפת מכירות.
-          </p>
         </div>
       </div>
     </section>

@@ -27,11 +27,6 @@ export default function Footer() {
               </a>
             </li>
             <li>
-              <a href="#ethics" className="hover:text-green-900">
-                אתיקה ושקיפות
-              </a>
-            </li>
-            <li>
               <a href="#faq" className="hover:text-green-900">
                 שאלות נפוצות
               </a>
