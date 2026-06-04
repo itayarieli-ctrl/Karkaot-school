@@ -1,3 +1,5 @@
+import SectionTitle from "./SectionTitle";
+
 const faqs = [
   {
     q: "למי הקורס מתאים?",
@@ -27,21 +29,34 @@ const faqs = [
 
 export default function Faq() {
   return (
-    <section id="faq" className="bg-white py-20 md:py-28">
+    <section id="faq" className="py-20 md:py-28" style={{ backgroundColor: "#FCFBF7" }}>
       <div className="mx-auto max-w-3xl px-5">
-        <h2 className="text-3xl font-bold tracking-tight md:text-4xl">
-          שאלות נפוצות
-        </h2>
-        <dl className="mt-10 divide-y divide-stone-200 border-y border-stone-200">
+        <SectionTitle align="center">שאלות נפוצות</SectionTitle>
+        <dl
+          className="mt-10 divide-y"
+          style={{
+            borderTop: "1px solid #E8E2DA",
+            borderBottom: "1px solid #E8E2DA",
+            borderColor: "#E8E2DA",
+          }}
+        >
           {faqs.map((f) => (
             <details key={f.q} className="group py-5">
-              <summary className="flex cursor-pointer items-center justify-between text-lg font-semibold text-stone-900 hover:text-green-900">
+              <summary
+                className="flex cursor-pointer items-center justify-between text-lg font-semibold hover:opacity-80"
+                style={{ color: "#4A3E36" }}
+              >
                 {f.q}
-                <span className="text-2xl text-stone-400 transition group-open:rotate-45">
+                <span
+                  className="text-2xl transition group-open:rotate-45"
+                  style={{ color: "#9E846E" }}
+                >
                   +
                 </span>
               </summary>
-              <dd className="mt-3 leading-relaxed text-stone-700">{f.a}</dd>
+              <dd className="mt-3 leading-relaxed" style={{ color: "#0D1C16" }}>
+                {f.a}
+              </dd>
             </details>
           ))}
         </dl>

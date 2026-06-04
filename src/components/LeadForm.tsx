@@ -10,20 +10,45 @@ const interests = [
   { value: "consult", label: "ייעוץ עסקה ספציפית" },
 ];
 
+const inputStyle: React.CSSProperties = {
+  backgroundColor: "#FCFBF7",
+  border: "1px solid #E8E2DA",
+  borderRadius: "8px",
+  padding: "12px 14px",
+  fontSize: "16px",
+  color: "#0D1C16",
+  outline: "none",
+  width: "100%",
+};
+
+const labelStyle: React.CSSProperties = {
+  display: "block",
+  fontSize: "14px",
+  fontWeight: 500,
+  color: "#4A3E36",
+  marginBottom: "6px",
+};
+
 export default function LeadForm() {
   const [status, setStatus] = useState<Status>("idle");
   const [message, setMessage] = useState("");
+  const [consent, setConsent] = useState(false);
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    if (!consent) {
+      setStatus("error");
+      setMessage("יש לאשר את תנאי השימוש");
+      return;
+    }
     setStatus("loading");
     const form = new FormData(e.currentTarget);
     const payload = {
-      name: String(form.get("name") || "").trim(),
+      name: `${String(form.get("firstName") || "").trim()} ${String(form.get("lastName") || "").trim()}`.trim(),
       email: String(form.get("email") || "").trim(),
       phone: String(form.get("phone") || "").trim(),
       interest: String(form.get("interest") || ""),
-      message: String(form.get("message") || "").trim(),
+      message: "",
     };
 
     try {
@@ -37,6 +62,7 @@ export default function LeadForm() {
       setStatus("ok");
       setMessage("תודה! קיבלנו את הפנייה ונחזור אליכם בימים הקרובים.");
       (e.target as HTMLFormElement).reset();
+      setConsent(false);
     } catch (err) {
       setStatus("error");
       setMessage(err instanceof Error ? err.message : "שגיאה בשליחה");
@@ -44,114 +70,166 @@ export default function LeadForm() {
   }
 
   return (
-    <section
-      id="lead"
-      className="bg-gradient-to-b from-green-900 to-green-800 py-20 md:py-28"
-    >
-      <div className="mx-auto max-w-3xl px-5">
-        <div className="text-center text-stone-50">
-          <h2 className="text-3xl font-bold tracking-tight md:text-4xl">
-            הצטרפו לרשימת ההמתנה
-          </h2>
-          <p className="mt-3 text-lg text-green-50/90">
-            השאירו פרטים ונחזור אליכם עם פתיחת ההרשמה, מידע מעמיק על הקורס,
-            או לתיאום שיחת ייעוץ. ללא דיוור שיווקי אגרסיבי. ללא דחיפת מכירות.
-          </p>
-        </div>
-
-        <form
-          onSubmit={onSubmit}
-          className="mt-10 grid gap-4 rounded-2xl bg-white p-6 shadow-xl md:p-8"
+    <section id="lead" className="py-20 md:py-28" style={{ backgroundColor: "#4A3E36" }}>
+      <div className="mx-auto max-w-6xl px-5">
+        <div
+          className="grid gap-8 overflow-hidden rounded-[32px] p-8 shadow-xl md:grid-cols-2 md:p-12"
+          style={{ backgroundColor: "#FCFBF7" }}
         >
-          <div className="grid gap-4 md:grid-cols-2">
-            <Field name="name" label="שם מלא" required />
-            <Field name="email" label='דוא"ל' type="email" required />
-            <Field name="phone" label="טלפון (אופציונלי)" type="tel" />
-            <label className="flex flex-col gap-1.5">
-              <span className="text-sm font-medium text-stone-700">
-                במה התעניינתם?
-              </span>
-              <select
-                name="interest"
-                defaultValue=""
-                required
-                className="rounded-md border border-stone-300 bg-white px-3 py-2.5 text-base outline-none focus:border-green-700 focus:ring-2 focus:ring-green-700/20"
+          {/* Side panel — title + contact info */}
+          <div className="flex flex-col justify-center md:order-2">
+            <h2
+              className="text-4xl font-extrabold tracking-tight md:text-5xl"
+              style={{ color: "#4A3E36" }}
+            >
+              צרו קשר
+            </h2>
+            <div className="section-divider !justify-start mt-3">
+              <span className="dot" />
+            </div>
+            <p
+              className="mt-6 text-lg leading-relaxed"
+              style={{ color: "#0D1C16" }}
+            >
+              השאירו פרטים ונחזור אליכם עם פתיחת ההרשמה, מידע מעמיק על
+              הקורס, או לתיאום שיחת ייעוץ. ללא דיוור שיווקי אגרסיבי.
+              ללא דחיפת מכירות.
+            </p>
+            <p className="mt-6 flex items-center gap-2 text-sm" style={{ color: "#4A3E36" }}>
+              <span>✉</span>
+              <a
+                href="mailto:hello@karka101.co.il"
+                className="font-semibold hover:underline"
               >
-                <option value="" disabled>
-                  בחרו אפשרות
-                </option>
-                {interests.map((i) => (
-                  <option key={i.value} value={i.value}>
-                    {i.label}
-                  </option>
-                ))}
-              </select>
-            </label>
+                hello@karka101.co.il
+              </a>
+            </p>
           </div>
-          <label className="flex flex-col gap-1.5">
-            <span className="text-sm font-medium text-stone-700">
-              משהו שאתם רוצים שנדע (אופציונלי)
-            </span>
-            <textarea
-              name="message"
-              rows={3}
-              className="rounded-md border border-stone-300 bg-white px-3 py-2.5 text-base outline-none focus:border-green-700 focus:ring-2 focus:ring-green-700/20"
-            />
-          </label>
 
-          <button
-            type="submit"
-            disabled={status === "loading"}
-            className="mt-2 rounded-md bg-green-800 px-6 py-3 text-base font-semibold text-stone-50 transition hover:bg-green-900 disabled:opacity-50"
+          {/* Form */}
+          <form
+            onSubmit={onSubmit}
+            className="md:order-1"
+            noValidate
           >
-            {status === "loading" ? "שולח..." : "שליחה"}
-          </button>
+            <div className="grid gap-4 md:grid-cols-2">
+              <div>
+                <label htmlFor="firstName" style={labelStyle}>
+                  שם פרטי <span style={{ color: "#B91C1C" }}>*</span>
+                </label>
+                <input
+                  id="firstName"
+                  name="firstName"
+                  type="text"
+                  required
+                  style={inputStyle}
+                />
+              </div>
+              <div>
+                <label htmlFor="lastName" style={labelStyle}>
+                  שם משפחה <span style={{ color: "#B91C1C" }}>*</span>
+                </label>
+                <input
+                  id="lastName"
+                  name="lastName"
+                  type="text"
+                  required
+                  style={inputStyle}
+                />
+              </div>
 
-          {status === "ok" && (
-            <p className="rounded-md bg-green-50 p-3 text-sm font-medium text-green-900">
-              {message}
-            </p>
-          )}
-          {status === "error" && (
-            <p className="rounded-md bg-red-50 p-3 text-sm font-medium text-red-900">
-              {message}
-            </p>
-          )}
+              <div>
+                <label htmlFor="phone" style={labelStyle}>
+                  טלפון <span style={{ color: "#B91C1C" }}>*</span>
+                </label>
+                <input
+                  id="phone"
+                  name="phone"
+                  type="tel"
+                  required
+                  style={inputStyle}
+                />
+              </div>
+              <div>
+                <label htmlFor="interest" style={labelStyle}>
+                  במה התעניינתם? <span style={{ color: "#B91C1C" }}>*</span>
+                </label>
+                <select
+                  id="interest"
+                  name="interest"
+                  defaultValue=""
+                  required
+                  style={{ ...inputStyle, appearance: "auto" }}
+                >
+                  <option value="" disabled>
+                    בחרו אפשרות
+                  </option>
+                  {interests.map((i) => (
+                    <option key={i.value} value={i.value}>
+                      {i.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
 
-          <p className="mt-2 text-xs leading-relaxed text-stone-500">
-            בהשארת הפרטים אתם מאשרים שנפנה אליכם לגבי הקורס/הקהילה/הייעוץ.
-            לא נעביר את פרטיכם לצד שלישי. תוכלו להסיר עצמכם מרשימת התפוצה
-            בכל עת.
-          </p>
-        </form>
+              <div className="md:col-span-2">
+                <label htmlFor="email" style={labelStyle}>
+                  אימייל <span style={{ color: "#B91C1C" }}>*</span>
+                </label>
+                <input
+                  id="email"
+                  name="email"
+                  type="email"
+                  required
+                  style={inputStyle}
+                />
+              </div>
+            </div>
+
+            <label
+              className="mt-5 flex items-start gap-2 text-sm"
+              style={{ color: "#4A3E36" }}
+            >
+              <input
+                type="checkbox"
+                checked={consent}
+                onChange={(e) => setConsent(e.target.checked)}
+                style={{ marginTop: "4px", accentColor: "#18362A" }}
+              />
+              <span>
+                קראתי ואני מאשר/ת כי תפנו אליי בנוגע לקורס/קהילה/ייעוץ. ניתן
+                להסיר מרשימת התפוצה בכל עת.
+              </span>
+            </label>
+
+            <button
+              type="submit"
+              disabled={status === "loading"}
+              className="mt-5 w-full rounded-md px-6 py-3.5 text-base font-semibold transition hover:opacity-90 disabled:opacity-50"
+              style={{ backgroundColor: "#18362A", color: "#FCFBF7" }}
+            >
+              {status === "loading" ? "שולח..." : "שלח"}
+            </button>
+
+            {status === "ok" && (
+              <p
+                className="mt-4 rounded-md p-3 text-sm font-medium"
+                style={{ backgroundColor: "rgba(159, 199, 148, 0.3)", color: "#18362A" }}
+              >
+                {message}
+              </p>
+            )}
+            {status === "error" && (
+              <p
+                className="mt-4 rounded-md p-3 text-sm font-medium"
+                style={{ backgroundColor: "#FEE2E2", color: "#991B1B" }}
+              >
+                {message}
+              </p>
+            )}
+          </form>
+        </div>
       </div>
     </section>
-  );
-}
-
-function Field({
-  name,
-  label,
-  type = "text",
-  required = false,
-}: {
-  name: string;
-  label: string;
-  type?: string;
-  required?: boolean;
-}) {
-  return (
-    <label className="flex flex-col gap-1.5">
-      <span className="text-sm font-medium text-stone-700">
-        {label}
-        {required && <span className="text-red-600"> *</span>}
-      </span>
-      <input
-        name={name}
-        type={type}
-        required={required}
-        className="rounded-md border border-stone-300 bg-white px-3 py-2.5 text-base outline-none focus:border-green-700 focus:ring-2 focus:ring-green-700/20"
-      />
-    </label>
   );
 }

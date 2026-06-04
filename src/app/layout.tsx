@@ -31,9 +31,9 @@ export default function RootLayout({
     <html
       lang="he"
       dir="rtl"
-      className={`${heebo.variable} h-full antialiased`}
+      className={`${arimo.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-stone-50 text-stone-900">
+      <body className="min-h-full flex flex-col">
         {children}
       </body>
     </html>
