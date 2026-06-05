@@ -98,10 +98,10 @@ export default function LeadForm() {
             <p className="mt-6 flex items-center gap-2 text-sm" style={{ color: "#4A3E36" }}>
               <span>✉</span>
               <a
-                href="mailto:hello@karka101.co.il"
+                href="mailto:info@ishadama.co.il"
                 className="font-semibold hover:underline"
               >
-                hello@karka101.co.il
+                info@ishadama.co.il
               </a>
             </p>
           </div>

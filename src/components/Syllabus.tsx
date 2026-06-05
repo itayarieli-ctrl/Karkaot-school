@@ -42,6 +42,10 @@ const webinars = [
     title: "ניתוח הנדל\"ן בישראל בעשור האחרון",
     desc: "מה אפשר ללמוד מהמספרים של 2014–2024 — ומה מהם רלוונטי לעתיד.",
   },
+  {
+    title: "וובינרים נוספים מתעדכנים מעת לעת",
+    desc: "סדרת וובינרים פתוחה לתלמידי הקורס. נושאים חדשים מתווספים בהתאם לאירועי השוק והרגולציה.",
+  },
 ];
 
 export default function Syllabus() {
@@ -86,9 +90,12 @@ export default function Syllabus() {
         </div>
 
         <h3 className="mt-14 text-center text-xl font-bold" style={{ color: "#4A3E36" }}>
-          <span className="marker-bg">בנוסף — וובינרים</span>
+          <span className="marker-bg">סדרת וובינרים — דוגמאות</span>
         </h3>
-        <div className="mt-6 grid gap-4 md:grid-cols-2">
+        <p className="mt-3 text-center text-sm" style={{ color: "#9E846E" }}>
+          חברי הקורס מקבלים גישה לכל הוובינרים הקיימים ולחדשים שייפתחו בהמשך
+        </p>
+        <div className="mt-6 grid gap-4 md:grid-cols-3">
           {webinars.map((w) => (
             <article
               key={w.title}

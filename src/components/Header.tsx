@@ -3,10 +3,10 @@ import IshAdamaLogo from "./IshAdamaLogo";
 const ISH_ADAMA = "https://ishadama.co.il";
 
 const navItems = [
-  { label: "לימודי קרקעות", href: "#top", active: true },
   { label: "דוגמאות מהשטח", href: `${ISH_ADAMA}/דוגמאות-מהשטח/` },
   { label: "מאמרים וכתבות", href: `${ISH_ADAMA}/מאמרים-וכתבות/` },
   { label: "משקיעים ממליצים", href: `${ISH_ADAMA}/משקיעים-ממליצים/` },
+  { label: "לימודי קרקעות", href: "#top", active: true },
   { label: "אודותינו", href: `${ISH_ADAMA}/אודותינו/` },
 ];
 
