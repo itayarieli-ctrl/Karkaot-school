@@ -20,10 +20,10 @@ export default function Footer() {
             ניווט
           </h4>
           <ul className="mt-3 space-y-2" style={{ color: "rgba(252, 251, 247, 0.85)" }}>
-            <li><a href="#services" className="hover:opacity-70">שירותים</a></li>
+            <li><a href="#services" className="hover:opacity-70">קורסים</a></li>
             <li><a href="#syllabus" className="hover:opacity-70">תוכן הקורס</a></li>
-            <li><a href="#process" className="hover:opacity-70">ייעוץ עסקה</a></li>
             <li><a href="#faq" className="hover:opacity-70">שאלות נפוצות</a></li>
+            <li style={{ color: "rgba(252, 251, 247, 0.55)" }}>ייעוץ עסקה ספציפית — בקרוב</li>
             <li><a href={ISH_ADAMA} className="hover:opacity-70">חזרה לאיש אדמה ←</a></li>
           </ul>
         </div>

@@ -50,9 +50,9 @@ export default function Hero() {
               className="mt-6 text-lg leading-relaxed md:text-xl"
               style={{ color: "#0D1C16" }}
             >
-              קורס מוקלט בגישה חופשית, קורס פרונטלי 1-on-1, וייעוץ אישי
-              לעסקאות קרקע ספציפיות — מאלעד אדליס מנצור, מייסד איש אדמה,
-              משקיע ויזם נדל&quot;ן עם 15 שנות ניסיון בישראל ובחו&quot;ל.
+              קורס מוקלט שמתחילים מתי שמתאים לכם, וקורס פרונטלי 1-on-1
+              מותאם אישית — מאלעד אדליס מנצור, מייסד איש אדמה, משקיע ויזם
+              נדל&quot;ן עם 15 שנות ניסיון בישראל ובחו&quot;ל.
             </p>
 
             <div className="mt-10 flex flex-col gap-3 sm:flex-row">
@@ -61,7 +61,7 @@ export default function Hero() {
                 className="rounded-md px-6 py-3 text-center text-base font-semibold transition hover:opacity-90"
                 style={{ backgroundColor: "#18362A", color: "#FCFBF7" }}
               >
-                הצטרפו לרשימת ההמתנה
+                השארת פרטים לפתיחת קורס
               </a>
               <a
                 href="#services"

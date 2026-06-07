@@ -5,9 +5,9 @@ import { useState } from "react";
 type Status = "idle" | "loading" | "ok" | "error";
 
 const interests = [
-  { value: "course", label: "קורס דיגיטלי" },
-  { value: "community", label: "קהילה חודשית" },
-  { value: "consult", label: "ייעוץ עסקה ספציפית" },
+  { value: "recorded", label: "קורס מוקלט" },
+  { value: "personal", label: "קורס פרונטלי 1-on-1" },
+  { value: "consult", label: "ייעוץ עסקה ספציפית (בקרוב)" },
 ];
 
 const inputStyle: React.CSSProperties = {
@@ -91,9 +91,9 @@ export default function LeadForm() {
               className="mt-6 text-lg leading-relaxed"
               style={{ color: "#0D1C16" }}
             >
-              השאירו פרטים ונחזור אליכם עם פתיחת ההרשמה, מידע מעמיק על
-              הקורס, או לתיאום שיחת ייעוץ. ללא דיוור שיווקי אגרסיבי.
-              ללא דחיפת מכירות.
+              השאירו פרטים ונחזור אליכם עם פתיחת ההרשמה לקורס המוקלט, או
+              לתיאום שיחת היכרות לקורס פרונטלי 1-on-1. ללא דיוור שיווקי
+              אגרסיבי.
             </p>
             <p className="mt-6 flex items-center gap-2 text-sm" style={{ color: "#4A3E36" }}>
               <span>✉</span>

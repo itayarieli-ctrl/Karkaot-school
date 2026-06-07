@@ -4,10 +4,10 @@ const services = [
   {
     badge: "ללומדים עצמאים",
     title: "קורס מוקלט",
-    subtitle: "לימוד בקצב שלכם, גישה חופשית ללא הגבלת זמן",
+    subtitle: "התחל מתי שמתאים לך, התקדם בקצב שלך",
     bullets: [
       "6 שיעורים מוקלטים מעמיקים",
-      "גישה ללא הגבלת צפיות וללא הגבלת זמן",
+      "פתיחה מיידית — אין מועד התחלה קבוצתי, כל אחד בקצב שלו",
       "גישה לארכיון הוובינרים — שיתעדכן מעת לעת",
       "חומרי עזר ותרגולים",
     ],
@@ -27,19 +27,6 @@ const services = [
     cta: "תיאום שיחת היכרות",
     href: "#lead",
   },
-  {
-    badge: "לבשלים להחלטה",
-    title: "ייעוץ עסקה",
-    subtitle: "ניתוח מקצועי של עסקה ספציפית שמוצגת לכם",
-    bullets: [
-      "בחנו עסקה שמוצגת לכם על ידי גורם חיצוני",
-      "ניתוח תכנוני, מיסויי וכלכלי על בסיס מידע ציבורי",
-      "דוח כתוב + שיחת היוועצות",
-      "בלי תיווך — רק ניתוח מקצועי לטובתכם",
-    ],
-    cta: "תיאום פנייה",
-    href: "#lead",
-  },
 ];
 
 export default function Services() {
@@ -47,17 +34,17 @@ export default function Services() {
     <section id="services" className="py-20 md:py-28" style={{ backgroundColor: "#FCFBF7" }}>
       <div className="mx-auto max-w-6xl px-5">
         <SectionTitle align="center">
-          שלוש דרכים ללמוד ולקבל החלטות חכמות יותר על קרקעות
+          שתי דרכים ללמוד קרקעות לעומק
         </SectionTitle>
         <p
           className="mx-auto mt-6 max-w-2xl text-center text-lg"
           style={{ color: "#0D1C16" }}
         >
-          בוחרים את הרמה שמתאימה לכם — מלימוד עצמי בקצב שלכם, דרך ליווי
-          פרונטלי אישי, ועד ניתוח מקצועי של עסקה ספציפית שאתם שוקלים.
+          בוחרים את הרמה שמתאימה לכם — מלימוד עצמי בקצב שלכם, ועד ליווי
+          פרונטלי אישי 1-on-1 עם אלעד.
         </p>
 
-        <div className="mt-12 grid gap-6 md:grid-cols-3">
+        <div className="mt-12 grid gap-6 md:grid-cols-2 md:max-w-4xl md:mx-auto">
           {services.map((s) => (
             <article
               key={s.title}
@@ -105,7 +92,7 @@ export default function Services() {
         </div>
 
         <p className="mt-8 text-center text-sm" style={{ color: "#9E846E" }}>
-          * פרטי מחירים ומועדים יוצגו לנרשמי רשימת ההמתנה.
+          * פרטי מחירים יוצגו בשיחת היכרות / לנרשמים לרשימה.
         </p>
       </div>
     </section>
