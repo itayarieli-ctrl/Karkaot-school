@@ -7,7 +7,7 @@ type Status = "idle" | "loading" | "ok" | "error";
 const interests = [
   { value: "recorded", label: "קורס מוקלט" },
   { value: "personal", label: "קורס פרונטלי 1-on-1" },
-  { value: "consult", label: "ייעוץ עסקה ספציפית (בקרוב)" },
+  { value: "consult", label: "ייעוץ עסקה ספציפית" },
 ];
 
 const inputStyle: React.CSSProperties = {
@@ -92,8 +92,9 @@ export default function LeadForm() {
               style={{ color: "#0D1C16" }}
             >
               השאירו פרטים ונחזור אליכם עם פתיחת ההרשמה לקורס המוקלט, או
-              לתיאום שיחת היכרות לקורס פרונטלי 1-on-1. ללא דיוור שיווקי
-              אגרסיבי.
+              לתיאום שיחת היכרות לקורס פרונטלי 1-on-1. מכיוון שאתם
+              מתעניינים בתחום, בהמשך נשלח לכם מידע נוסף אלא אם נקבל מכם
+              בקשה לא לקבל מידע.
             </p>
             <p className="mt-6 flex items-center gap-2 text-sm" style={{ color: "#4A3E36" }}>
               <span>✉</span>
