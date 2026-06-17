@@ -48,7 +48,19 @@ export default function Footer() {
         className="mx-auto max-w-6xl border-t px-5 py-5 text-xs"
         style={{ borderColor: "rgba(252, 251, 247, 0.12)", color: "rgba(252, 251, 247, 0.55)" }}
       >
-        © {new Date().getFullYear()} איש אדמה. כל הזכויות שמורות. ט.ל.ח.
+        <div className="flex flex-col items-start justify-between gap-3 sm:flex-row sm:items-center">
+          <span>
+            © {new Date().getFullYear()} איש אדמה. כל הזכויות שמורות. ט.ל.ח.
+          </span>
+          <span className="flex gap-4">
+            <a href="/privacy" className="hover:opacity-90">
+              מדיניות פרטיות
+            </a>
+            <a href="/terms" className="hover:opacity-90">
+              תקנון שימוש
+            </a>
+          </span>
+        </div>
       </div>
     </footer>
   );
