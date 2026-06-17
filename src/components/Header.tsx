@@ -36,67 +36,70 @@ export default function Header() {
   }, []);
 
   return (
-    <header
-      id="top"
-      className="sticky top-0 z-40 backdrop-blur"
-      style={{
-        backgroundColor: "rgba(252, 251, 247, 0.92)",
-        borderBottom: "1px solid #E8E2DA",
-      }}
-    >
-      <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-3">
-        <a href={ISH_ADAMA} className="flex h-10 items-center shrink-0">
-          <IshAdamaLogo variant="dark" />
-        </a>
+    <>
+      <header
+        id="top"
+        className="sticky top-0 z-40 backdrop-blur"
+        style={{
+          backgroundColor: "rgba(252, 251, 247, 0.92)",
+          borderBottom: "1px solid #E8E2DA",
+        }}
+      >
+        <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-3">
+          <a href={ISH_ADAMA} className="flex h-10 items-center shrink-0">
+            <IshAdamaLogo variant="dark" />
+          </a>
 
-        {/* Desktop nav */}
-        <nav
-          className="hidden flex-1 items-center justify-center gap-7 text-sm font-medium md:flex"
-          style={{ color: "#4A3E36" }}
-        >
-          {navItems.map((item) => (
-            <a
-              key={item.label}
-              href={item.href}
-              className="transition hover:opacity-70"
-              style={
-                item.active
-                  ? { color: "#18362A", fontWeight: 600 }
-                  : undefined
-              }
-            >
-              {item.label}
-            </a>
-          ))}
-        </nav>
+          {/* Desktop nav */}
+          <nav
+            className="hidden flex-1 items-center justify-center gap-7 text-sm font-medium md:flex"
+            style={{ color: "#4A3E36" }}
+          >
+            {navItems.map((item) => (
+              <a
+                key={item.label}
+                href={item.href}
+                className="transition hover:opacity-70"
+                style={
+                  item.active
+                    ? { color: "#18362A", fontWeight: 600 }
+                    : undefined
+                }
+              >
+                {item.label}
+              </a>
+            ))}
+          </nav>
 
-        {/* Desktop CTA */}
-        <a
-          href="#lead"
-          className="hidden shrink-0 rounded-md px-4 py-2 text-sm font-semibold transition hover:opacity-90 md:inline-block"
-          style={{ backgroundColor: "#18362A", color: "#FCFBF7" }}
-        >
-          צרו קשר
-        </a>
+          {/* Desktop CTA */}
+          <a
+            href="#lead"
+            className="hidden shrink-0 rounded-md px-4 py-2 text-sm font-semibold transition hover:opacity-90 md:inline-block"
+            style={{ backgroundColor: "#18362A", color: "#FCFBF7" }}
+          >
+            צרו קשר
+          </a>
 
-        {/* Mobile hamburger */}
-        <button
-          type="button"
-          onClick={() => setOpen(true)}
-          aria-label="פתח תפריט"
-          aria-expanded={open}
-          className="grid h-10 w-10 place-items-center rounded-md md:hidden"
-          style={{ color: "#4A3E36" }}
-        >
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-            <line x1="3" y1="6" x2="21" y2="6" />
-            <line x1="3" y1="12" x2="21" y2="12" />
-            <line x1="3" y1="18" x2="21" y2="18" />
-          </svg>
-        </button>
-      </div>
+          {/* Mobile hamburger */}
+          <button
+            type="button"
+            onClick={() => setOpen(true)}
+            aria-label="פתח תפריט"
+            aria-expanded={open}
+            className="grid h-10 w-10 place-items-center rounded-md md:hidden"
+            style={{ color: "#4A3E36" }}
+          >
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+              <line x1="3" y1="6" x2="21" y2="6" />
+              <line x1="3" y1="12" x2="21" y2="12" />
+              <line x1="3" y1="18" x2="21" y2="18" />
+            </svg>
+          </button>
+        </div>
+      </header>
 
-      {/* Mobile overlay */}
+      {/* Mobile overlay — rendered OUTSIDE the header so backdrop-blur
+          containing block doesn't trap our fixed positioning */}
       {open && (
         <div
           className="fixed inset-0 z-50 flex flex-col md:hidden"
@@ -151,6 +154,6 @@ export default function Header() {
           </nav>
         </div>
       )}
-    </header>
+    </>
   );
 }
