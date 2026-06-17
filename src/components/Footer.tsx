@@ -7,7 +7,7 @@ export default function Footer() {
     <footer style={{ backgroundColor: "#4A3E36", color: "#FCFBF7" }}>
       <div className="mx-auto grid max-w-6xl gap-8 px-5 py-12 md:grid-cols-3">
         <div>
-          <div className="h-16 w-32">
+          <div className="h-20">
             <IshAdamaLogo variant="light" />
           </div>
           <p className="mt-4 text-sm" style={{ color: "rgba(252, 251, 247, 0.75)" }}>

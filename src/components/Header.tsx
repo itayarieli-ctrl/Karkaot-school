@@ -21,7 +21,7 @@ export default function Header() {
       }}
     >
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-6 px-5 py-3">
-        <a href={ISH_ADAMA} className="block h-12 w-28 shrink-0">
+        <a href={ISH_ADAMA} className="flex h-10 items-center shrink-0">
           <IshAdamaLogo variant="dark" />
         </a>
 
