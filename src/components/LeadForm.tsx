@@ -1,13 +1,14 @@
 "use client";
 
 import { useState } from "react";
+import copy from "../../content/copy.json";
 
 type Status = "idle" | "loading" | "ok" | "error";
 
-const interests = [
-  { value: "course", label: "קורס דיגיטלי" },
-  { value: "consult", label: "ייעוץ עסקה ספציפית" },
-];
+// Interest VALUES are the API contract (must match the server-side mapping
+// in src/app/api/lead/route.ts). Only the LABELS are user-editable, via
+// content/copy.json under "lead.interest_labels".
+const interestValues: ("course" | "consult")[] = ["course", "consult"];
 
 const inputStyle: React.CSSProperties = {
   backgroundColor: "#FCFBF7",
@@ -29,6 +30,12 @@ const labelStyle: React.CSSProperties = {
 };
 
 export default function LeadForm() {
+  const t = copy.lead;
+  const interests = interestValues.map((v) => ({
+    value: v,
+    label: t.interest_labels[v as keyof typeof t.interest_labels],
+  }));
+
   const [status, setStatus] = useState<Status>("idle");
   const [message, setMessage] = useState("");
   const [consent, setConsent] = useState(false);
@@ -60,7 +67,7 @@ export default function LeadForm() {
       const data = await res.json();
       if (!res.ok) throw new Error(data?.error || "שגיאה בשליחה");
       setStatus("ok");
-      setMessage("תודה! קיבלנו את הפנייה ונחזור אליכם בימים הקרובים.");
+      setMessage(t.success);
       (e.target as HTMLFormElement).reset();
       setConsent(false);
     } catch (err) {
@@ -82,7 +89,7 @@ export default function LeadForm() {
               className="text-4xl font-extrabold tracking-tight md:text-5xl"
               style={{ color: "#4A3E36" }}
             >
-              צרו קשר
+              {t.title}
             </h2>
             <div className="section-divider !justify-start mt-3">
               <span className="dot" />
@@ -91,15 +98,15 @@ export default function LeadForm() {
               className="mt-6 text-lg leading-relaxed"
               style={{ color: "#0D1C16" }}
             >
-              השאירו פרטים ונחזור אליכם לתיאום שיחת ייעוץ.
+              {t.subtitle}
             </p>
             <p className="mt-6 flex items-center gap-2 text-sm" style={{ color: "#4A3E36" }}>
               <span>✉</span>
               <a
-                href="mailto:admin@ishadama.co.il"
+                href={`mailto:${t.contact_email}`}
                 className="font-semibold hover:underline"
               >
-                admin@ishadama.co.il
+                {t.contact_email}
               </a>
             </p>
           </div>
@@ -194,11 +201,7 @@ export default function LeadForm() {
                 onChange={(e) => setConsent(e.target.checked)}
                 style={{ marginTop: "4px", accentColor: "#18362A" }}
               />
-              <span>
-                קראתי ואני מאשר/ת כי תפנו אליי בנוגע לקורס/ייעוץ. אישור
-                מהווה הסכמה לקבלת עדכוני מידע ועדכונים שיווקיים. ניתן
-                להסיר מרשימת התפוצה בכל עת.
-              </span>
+              <span>{t.consent}</span>
             </label>
 
             <button

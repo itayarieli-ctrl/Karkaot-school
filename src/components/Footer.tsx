@@ -1,8 +1,10 @@
 import IshAdamaLogo from "./IshAdamaLogo";
+import copy from "../../content/copy.json";
 
 const ISH_ADAMA = "https://ishadama.co.il";
 
 export default function Footer() {
+  const t = copy.footer;
   return (
     <footer style={{ backgroundColor: "#4A3E36", color: "#FCFBF7" }}>
       <div className="mx-auto grid max-w-6xl gap-8 px-5 py-12 md:grid-cols-3">
@@ -11,7 +13,7 @@ export default function Footer() {
             <IshAdamaLogo variant="light" />
           </div>
           <p className="mt-4 text-sm" style={{ color: "rgba(252, 251, 247, 0.75)" }}>
-            המקום ללמוד על קרקעות בישראל.
+            {t.tagline}
           </p>
         </div>
 
@@ -23,8 +25,8 @@ export default function Footer() {
             <li><a href="#services" className="hover:opacity-70">קורסים</a></li>
             <li><a href="#syllabus" className="hover:opacity-70">תוכן הקורס</a></li>
             <li><a href="#faq" className="hover:opacity-70">שאלות נפוצות</a></li>
-            <li style={{ color: "rgba(252, 251, 247, 0.55)" }}>ייעוץ עסקה ספציפית — בקרוב</li>
-            <li><a href={ISH_ADAMA} className="hover:opacity-70">חזרה לאיש אדמה</a></li>
+            <li style={{ color: "rgba(252, 251, 247, 0.55)" }}>{t.consultation_soon}</li>
+            <li><a href={ISH_ADAMA} className="hover:opacity-70">{t.back_to_ishadama}</a></li>
           </ul>
         </div>
 
@@ -35,8 +37,8 @@ export default function Footer() {
           <ul className="mt-3 space-y-2" style={{ color: "rgba(252, 251, 247, 0.85)" }}>
             <li>
               דוא&quot;ל:{" "}
-              <a href="mailto:admin@ishadama.co.il" className="hover:opacity-70">
-                admin@ishadama.co.il
+              <a href={`mailto:${t.contact_email}`} className="hover:opacity-70">
+                {t.contact_email}
               </a>
             </li>
             <li><a href="#lead" className="hover:opacity-70">טופס יצירת קשר</a></li>

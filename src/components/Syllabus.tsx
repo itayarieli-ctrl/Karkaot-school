@@ -1,64 +1,21 @@
 import SectionTitle from "./SectionTitle";
-
-const lessons = [
-  {
-    n: "01",
-    title: "יסודות ההשקעה בקרקעות בישראל",
-    desc: "איך בנוי שוק הקרקעות, מי השחקנים, ומה מבדיל קרקע מהשקעה בנדל\"ן בנוי.",
-  },
-  {
-    n: "02",
-    title: "קריאת תכניות מתאר ותהליך ההפשרה",
-    desc: "תמ\"א, תב״ע — בעברית פשוטה. איך לפענח מסמך תכנון, ומה זה בכלל אומר על הקרקע.",
-  },
-  {
-    n: "03",
-    title: "זיהוי מחירי קרקע אמיתיים",
-    desc: "ההבדל בין מחיר שיווקי למחיר אמיתי. איך לבנות תזרים והערכת שווי לפני שאתם שוקלים לחתום.",
-  },
-  {
-    n: "04",
-    title: "סיכונים ומלכודות בהשקעה בקרקע",
-    desc: "תקנות 2016, חוק המתווכים, סוגי בעלות, מושע, מסים נסתרים, ועד מתי כדאי להתחרט.",
-  },
-  {
-    n: "05",
-    title: "מגמות עתידיות והשפעות מאקרו-כלכליות",
-    desc: "ריבית, אינפלציה, רגולציה, הגירה, ביקושים אזוריים. מה מזיז את שוק הקרקעות באמת.",
-  },
-  {
-    n: "06",
-    title: "מיסוי קרקע ואפשרויות מימון",
-    desc: "מס שבח, מס רכישה, היטל השבחה. ומה בכל הקשור למימון פרטי לעומת בנקאי.",
-  },
-];
-
-const webinars = [
-  {
-    title: "השקעות נדל\"ן בזמן משבר",
-    desc: "מה קורה לקרקעות במלחמות, ירידות ריבית, וזעזועי שוק. ניתוח של תקופות עבר.",
-  },
-  {
-    title: "ניתוח הנדל\"ן בישראל בעשור האחרון",
-    desc: "מה אפשר ללמוד מהמספרים של 2014–2024 — ומה מהם רלוונטי לעתיד.",
-  },
-];
+import copy from "../../content/copy.json";
 
 export default function Syllabus() {
+  const t = copy.syllabus;
   return (
     <section id="syllabus" className="py-20 md:py-28" style={{ backgroundColor: "#FCFBF7" }}>
       <div className="mx-auto max-w-6xl px-5">
-        <SectionTitle align="center">תוכנית הקורס</SectionTitle>
+        <SectionTitle align="center">{t.title}</SectionTitle>
         <p
           className="mx-auto mt-6 max-w-3xl text-center text-lg"
           style={{ color: "#0D1C16" }}
         >
-          6 שיעורים מוקלטים + 2 וובינרים. כל שיעור עומד בפני עצמו ובנוי
-          לדוגמאות אמיתיות מהשטח — לא תיאוריה.
+          {t.subtitle}
         </p>
 
         <div className="mt-12 grid gap-4 md:grid-cols-2">
-          {lessons.map((l) => (
+          {t.lessons.map((l) => (
             <article
               key={l.n}
               className="rounded-xl p-6"
@@ -86,10 +43,10 @@ export default function Syllabus() {
         </div>
 
         <h3 className="mt-14 text-center text-xl font-bold" style={{ color: "#4A3E36" }}>
-          <span className="marker-bg">בנוסף — וובינרים</span>
+          <span className="marker-bg">{t.webinars_title}</span>
         </h3>
         <div className="mt-6 grid gap-4 md:grid-cols-2">
-          {webinars.map((w) => (
+          {t.webinars.map((w) => (
             <article
               key={w.title}
               className="rounded-xl p-6"

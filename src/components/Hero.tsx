@@ -1,4 +1,7 @@
+import copy from "../../content/copy.json";
+
 export default function Hero() {
+  const t = copy.hero;
   return (
     <section
       className="relative overflow-hidden"
@@ -22,7 +25,7 @@ export default function Hero() {
               className="flex h-full w-full items-center justify-center text-sm font-medium"
               style={{ color: "#9E846E" }}
             >
-              [ תמונה — אלעד בשדה / נוף קרקע ]
+              {t.image_placeholder}
             </div>
           </div>
 
@@ -34,25 +37,21 @@ export default function Hero() {
                 color: "#18362A",
               }}
             >
-              לימוד מעשי של עולם הקרקעות בישראל
+              {t.badge}
             </span>
             <h1
               className="mt-6 text-4xl font-extrabold leading-tight tracking-tight md:text-6xl"
               style={{ color: "#4A3E36" }}
             >
-              ללמוד קרקעות
+              {t.h1_line1}
               <br />
-              <span style={{ color: "#18362A" }}>
-                ממי שעושה את זה כל יום.
-              </span>
+              <span style={{ color: "#18362A" }}>{t.h1_line2}</span>
             </h1>
             <p
               className="mt-6 text-lg leading-relaxed md:text-xl"
               style={{ color: "#0D1C16" }}
             >
-              קורס דיגיטלי וייעוץ אישי לעסקאות קונקרטיות — מאלעד אדליס
-              מנצור, יזם ומשקיע נדל&quot;ן עם 15 שנות ניסיון בקרקעות
-              בישראל ובחו&quot;ל.
+              {t.subtitle}
             </p>
 
             <div className="mt-10 flex flex-col gap-3 sm:flex-row">
@@ -61,7 +60,7 @@ export default function Hero() {
                 className="rounded-md px-6 py-3 text-center text-base font-semibold transition hover:opacity-90"
                 style={{ backgroundColor: "#18362A", color: "#FCFBF7" }}
               >
-                הצטרפו אלינו
+                {t.cta_primary}
               </a>
               <a
                 href="#services"
@@ -72,7 +71,7 @@ export default function Hero() {
                   backgroundColor: "transparent",
                 }}
               >
-                מה השירותים שלנו
+                {t.cta_secondary}
               </a>
             </div>
           </div>
