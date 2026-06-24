@@ -44,11 +44,12 @@ export default function LeadForm() {
     setStatus("loading");
     const form = new FormData(e.currentTarget);
     const payload = {
-      name: `${String(form.get("firstName") || "").trim()} ${String(form.get("lastName") || "").trim()}`.trim(),
+      firstName: String(form.get("firstName") || "").trim(),
+      lastName: String(form.get("lastName") || "").trim(),
       email: String(form.get("email") || "").trim(),
       phone: String(form.get("phone") || "").trim(),
       interest: String(form.get("interest") || ""),
-      message: "",
+      consent: true,
     };
 
     try {

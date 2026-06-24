@@ -1,20 +1,31 @@
 import { NextResponse } from "next/server";
-import { supabaseAdmin } from "@/lib/supabase";
 
-const ALLOWED_INTERESTS = ["recorded", "personal", "consult"];
-
-const INTEREST_LABELS: Record<string, string> = {
-  recorded: "קורס מוקלט",
-  personal: "קורס פרונטלי 1-on-1",
-  consult: "ייעוץ עסקה ספציפית",
+// Map the form's interest values to Scalla's cf_2662 dropdown options.
+// Scalla currently has only two options on that field — recorded and
+// personal collapse into the same "learning" bucket. If you want more
+// granularity, add options to cf_2662 in Scalla and update this map.
+const INTEREST_TO_SCALLA: Record<string, string> = {
+  recorded: "לימודי קרקעות",
+  personal: "לימודי קרקעות",
+  consult: "ייעוץ לעסקה",
 };
 
-type Lead = {
-  name: string;
+const ALLOWED_INTERESTS = Object.keys(INTEREST_TO_SCALLA);
+
+const SCALLA_URL =
+  process.env.SCALLA_CAPTURE_URL ||
+  "https://api.scallacrm.co.il/modules/Webforms/capture.php";
+const SCALLA_PUBLIC_ID = process.env.SCALLA_PUBLIC_ID;
+const SCALLA_VTRFTK = process.env.SCALLA_VTRFTK;
+const SCALLA_FORM_NAME = process.env.SCALLA_FORM_NAME || "טופס ייעוץ או לימודים";
+
+type Payload = {
+  firstName: string;
+  lastName: string;
   email: string;
   phone: string;
   interest: string;
-  message: string;
+  consent: boolean;
 };
 
 export async function POST(req: Request) {
@@ -25,86 +36,93 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "גוף הבקשה לא תקין" }, { status: 400 });
   }
 
-  const name = typeof body.name === "string" ? body.name.trim() : "";
+  const firstName = typeof body.firstName === "string" ? body.firstName.trim() : "";
+  const lastName = typeof body.lastName === "string" ? body.lastName.trim() : "";
   const email = typeof body.email === "string" ? body.email.trim() : "";
   const phone = typeof body.phone === "string" ? body.phone.trim() : "";
   const interest = typeof body.interest === "string" ? body.interest : "";
-  const message = typeof body.message === "string" ? body.message.trim() : "";
+  const consent = body.consent === true;
 
-  if (!name || name.length < 2) {
-    return NextResponse.json({ error: "נא למלא שם" }, { status: 400 });
+  if (!firstName) {
+    return NextResponse.json({ error: "נא למלא שם פרטי" }, { status: 400 });
+  }
+  if (!lastName) {
+    return NextResponse.json({ error: "נא למלא שם משפחה" }, { status: 400 });
   }
   if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
     return NextResponse.json({ error: 'דוא"ל לא תקין' }, { status: 400 });
   }
+  if (!phone) {
+    return NextResponse.json({ error: "נא למלא טלפון" }, { status: 400 });
+  }
   if (!ALLOWED_INTERESTS.includes(interest)) {
     return NextResponse.json({ error: "נא לבחור תחום עניין" }, { status: 400 });
   }
+  if (!consent) {
+    return NextResponse.json(
+      { error: "יש לאשר את תנאי השימוש כדי לשלוח" },
+      { status: 400 }
+    );
+  }
 
-  const lead: Lead = { name, email, phone, interest, message };
+  const payload: Payload = { firstName, lastName, email, phone, interest, consent };
+  const result = await forwardToScalla(payload);
 
-  // Fan out to all configured destinations. Failures are logged but never
-  // block the user — once any one destination succeeds we have the lead.
-  const results = await Promise.allSettled([
-    deliverToWebhook(lead),
-    deliverToSupabase(lead),
-  ]);
+  if (!result.ok) {
+    console.error("[lead] Scalla rejected lead:", result.detail, payload);
+    return NextResponse.json(
+      { error: "שגיאה זמנית בשליחה. נסו שוב בעוד רגע." },
+      { status: 502 }
+    );
+  }
 
-  const stored = results.some((r) => r.status === "fulfilled" && r.value === true);
+  return NextResponse.json({ ok: true });
+}
 
-  // Log failures for visibility during early operations
-  results.forEach((r, i) => {
-    const name = ["webhook", "supabase"][i];
-    if (r.status === "rejected") {
-      console.warn(`[lead] ${name} delivery failed:`, r.reason);
-    } else if (r.status === "fulfilled" && r.value === false) {
-      console.info(`[lead] ${name} not configured (skipped)`);
+async function forwardToScalla(
+  p: Payload
+): Promise<{ ok: true } | { ok: false; detail: string }> {
+  if (!SCALLA_PUBLIC_ID || !SCALLA_VTRFTK) {
+    // Misconfiguration — better to fail loud so we don't silently swallow leads
+    return { ok: false, detail: "Scalla env vars not configured" };
+  }
+
+  const form = new URLSearchParams();
+  form.append("publicid", SCALLA_PUBLIC_ID);
+  form.append("__vtrftk", SCALLA_VTRFTK);
+  form.append("urlencodeenable", "1");
+  form.append("name", SCALLA_FORM_NAME);
+  form.append("lastname", p.lastName);
+  form.append("firstname", p.firstName);
+  form.append("email", p.email);
+  form.append("mobile", p.phone);
+  form.append("cf_2465", "כן"); // consent — only true reaches here
+  form.append("cf_2662", INTEREST_TO_SCALLA[p.interest] ?? p.interest);
+
+  try {
+    const res = await fetch(SCALLA_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+        Accept: "text/html, application/xhtml+xml, */*",
+      },
+      body: form.toString(),
+      // Don't follow redirects; Scalla returns a redirect on success that
+      // we don't need to chase.
+      redirect: "manual",
+      signal: AbortSignal.timeout(10_000),
+    });
+
+    // Scalla returns either 200 OK or a 302 redirect on success.
+    // 4xx/5xx → failure.
+    if (res.status === 200 || res.status === 302 || res.status === 303) {
+      return { ok: true };
     }
-  });
-
-  if (!stored) {
-    // No destination accepted the lead. Log everything so we can recover.
-    console.error("[lead] NO destination accepted, raw payload:", lead);
+    return { ok: false, detail: `HTTP ${res.status}` };
+  } catch (err) {
+    return {
+      ok: false,
+      detail: err instanceof Error ? err.message : String(err),
+    };
   }
-
-  return NextResponse.json({ ok: true, stored });
-}
-
-// --- Destination: Google Apps Script webhook (writes to Sheet + emails) ---
-async function deliverToWebhook(lead: Lead): Promise<boolean> {
-  const url = process.env.LEAD_WEBHOOK_URL;
-  if (!url) return false;
-  const res = await fetch(url, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      ...lead,
-      interestLabel: INTEREST_LABELS[lead.interest] ?? lead.interest,
-      timestamp: new Date().toISOString(),
-      source: "school.landing",
-    }),
-    // Keep this snappy — the user is waiting on the form submit response
-    signal: AbortSignal.timeout(8000),
-  });
-  if (!res.ok) {
-    throw new Error(`webhook HTTP ${res.status}`);
-  }
-  return true;
-}
-
-// --- Destination: Supabase table (optional backup) ---
-async function deliverToSupabase(lead: Lead): Promise<boolean> {
-  if (!supabaseAdmin) return false;
-  const { error } = await supabaseAdmin.from("leads").insert({
-    name: lead.name,
-    email: lead.email,
-    phone: lead.phone || null,
-    interest: lead.interest,
-    message: lead.message || null,
-    source: "landing",
-  });
-  if (error) {
-    throw new Error(`supabase: ${error.message}`);
-  }
-  return true;
 }
