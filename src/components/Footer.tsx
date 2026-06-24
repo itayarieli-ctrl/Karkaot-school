@@ -11,7 +11,7 @@ export default function Footer() {
             <IshAdamaLogo variant="light" />
           </div>
           <p className="mt-4 text-sm" style={{ color: "rgba(252, 251, 247, 0.75)" }}>
-            לימודי קרקעות — קורסים, קהילה וייעוץ אישי לעסקאות קרקע בישראל.
+            המקום ללמוד על קרקעות בישראל.
           </p>
         </div>
 
@@ -35,8 +35,8 @@ export default function Footer() {
           <ul className="mt-3 space-y-2" style={{ color: "rgba(252, 251, 247, 0.85)" }}>
             <li>
               דוא&quot;ל:{" "}
-              <a href="mailto:info@ishadama.co.il" className="hover:opacity-70">
-                info@ishadama.co.il
+              <a href="mailto:admin@ishadama.co.il" className="hover:opacity-70">
+                admin@ishadama.co.il
               </a>
             </li>
             <li><a href="#lead" className="hover:opacity-70">טופס יצירת קשר</a></li>

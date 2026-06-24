@@ -9,7 +9,7 @@ const lessons = [
   {
     n: "02",
     title: "קריאת תכניות מתאר ותהליך ההפשרה",
-    desc: "תמ\"א, ת\"בע — בעברית פשוטה. איך לפענח מסמך תכנון, ומה זה בכלל אומר על הקרקע.",
+    desc: "תמ\"א, תב״ע — בעברית פשוטה. איך לפענח מסמך תכנון, ומה זה בכלל אומר על הקרקע.",
   },
   {
     n: "03",
@@ -19,7 +19,7 @@ const lessons = [
   {
     n: "04",
     title: "סיכונים ומלכודות בהשקעה בקרקע",
-    desc: "תקנות 2016, חוק המתווכים, סוגי בעלות, מושע, מיסים נסתרים.",
+    desc: "תקנות 2016, חוק המתווכים, סוגי בעלות, מושע, מסים נסתרים, ועד מתי כדאי להתחרט.",
   },
   {
     n: "05",
@@ -40,11 +40,7 @@ const webinars = [
   },
   {
     title: "ניתוח הנדל\"ן בישראל בעשור האחרון",
-    desc: "מה אפשר ללמוד מהנתונים של 2014–2024 — ומה מהם רלוונטי לעתיד.",
-  },
-  {
-    title: "וובינרים נוספים מתעדכנים מעת לעת",
-    desc: "סדרת וובינרים פתוחה לתלמידי הקורס. נושאים חדשים מתווספים בהתאם לאירועי השוק והרגולציה.",
+    desc: "מה אפשר ללמוד מהמספרים של 2014–2024 — ומה מהם רלוונטי לעתיד.",
   },
 ];
 
@@ -57,8 +53,8 @@ export default function Syllabus() {
           className="mx-auto mt-6 max-w-3xl text-center text-lg"
           style={{ color: "#0D1C16" }}
         >
-          6 שיעורים מוקלטים. כל שיעור בנוי עם הסברים מפורטים ודוגמאות
-          מהשטח — לא רק תיאוריה.
+          6 שיעורים מוקלטים + 2 וובינרים. כל שיעור עומד בפני עצמו ובנוי
+          לדוגמאות אמיתיות מהשטח — לא תיאוריה.
         </p>
 
         <div className="mt-12 grid gap-4 md:grid-cols-2">
@@ -90,12 +86,9 @@ export default function Syllabus() {
         </div>
 
         <h3 className="mt-14 text-center text-xl font-bold" style={{ color: "#4A3E36" }}>
-          <span className="marker-bg">סדרת וובינרים — דוגמאות</span>
+          <span className="marker-bg">בנוסף — וובינרים</span>
         </h3>
-        <p className="mt-3 text-center text-sm" style={{ color: "#9E846E" }}>
-          חברי הקורס מקבלים גישה לכל הוובינרים הקיימים ולחדשים שייפתחו בהמשך
-        </p>
-        <div className="mt-6 grid gap-4 md:grid-cols-3">
+        <div className="mt-6 grid gap-4 md:grid-cols-2">
           {webinars.map((w) => (
             <article
               key={w.title}
@@ -114,10 +107,6 @@ export default function Syllabus() {
             </article>
           ))}
         </div>
-
-        <p className="mt-10 text-center text-sm" style={{ color: "#9E846E" }}>
-          * המחיר ומועד פתיחת הקורס יוצגו לנרשמים לרשימת ההמתנה ברגע שייקבעו.
-        </p>
       </div>
     </section>
   );

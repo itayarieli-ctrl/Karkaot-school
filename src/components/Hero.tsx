@@ -43,16 +43,16 @@ export default function Hero() {
               ללמוד קרקעות
               <br />
               <span style={{ color: "#18362A" }}>
-                ממי שעוסק בזה כל יום
+                ממי שעושה את זה כל יום.
               </span>
             </h1>
             <p
               className="mt-6 text-lg leading-relaxed md:text-xl"
               style={{ color: "#0D1C16" }}
             >
-              קורס אונליין שמתחילים מתי שמתאים לכם, וקורס פרונטלי 1-on-1
-              מותאם אישית — מאלעד אדליס מנצור, מייסד איש אדמה, משקיע ויזם
-              נדל&quot;ן עם 15 שנות ניסיון בישראל ובחו&quot;ל.
+              קורס דיגיטלי וייעוץ אישי לעסקאות קונקרטיות — מאלעד אדליס
+              מנצור, יזם ומשקיע נדל&quot;ן עם 15 שנות ניסיון בקרקעות
+              בישראל ובחו&quot;ל.
             </p>
 
             <div className="mt-10 flex flex-col gap-3 sm:flex-row">
@@ -61,7 +61,7 @@ export default function Hero() {
                 className="rounded-md px-6 py-3 text-center text-base font-semibold transition hover:opacity-90"
                 style={{ backgroundColor: "#18362A", color: "#FCFBF7" }}
               >
-                השארת פרטים לפתיחת קורס
+                הצטרפו אלינו
               </a>
               <a
                 href="#services"

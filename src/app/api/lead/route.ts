@@ -1,12 +1,9 @@
 import { NextResponse } from "next/server";
 
 // Map the form's interest values to Scalla's cf_2662 dropdown options.
-// Scalla currently has only two options on that field — recorded and
-// personal collapse into the same "learning" bucket. If you want more
-// granularity, add options to cf_2662 in Scalla and update this map.
+// Form has two options matching Scalla's exactly.
 const INTEREST_TO_SCALLA: Record<string, string> = {
-  recorded: "לימודי קרקעות",
-  personal: "לימודי קרקעות",
+  course: "לימודי קרקעות",
   consult: "ייעוץ לעסקה",
 };
 

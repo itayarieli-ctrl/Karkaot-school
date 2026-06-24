@@ -5,8 +5,7 @@ import { useState } from "react";
 type Status = "idle" | "loading" | "ok" | "error";
 
 const interests = [
-  { value: "recorded", label: "קורס מוקלט" },
-  { value: "personal", label: "קורס פרונטלי 1-on-1" },
+  { value: "course", label: "קורס דיגיטלי" },
   { value: "consult", label: "ייעוץ עסקה ספציפית" },
 ];
 
@@ -92,18 +91,15 @@ export default function LeadForm() {
               className="mt-6 text-lg leading-relaxed"
               style={{ color: "#0D1C16" }}
             >
-              השאירו פרטים ונחזור אליכם עם פתיחת ההרשמה לקורס המוקלט, או
-              לתיאום שיחת היכרות לקורס פרונטלי 1-on-1. מכיוון שאתם
-              מתעניינים בתחום, בהמשך נשלח לכם מידע נוסף אלא אם נקבל מכם
-              בקשה לא לקבל מידע.
+              השאירו פרטים ונחזור אליכם לתיאום שיחת ייעוץ.
             </p>
             <p className="mt-6 flex items-center gap-2 text-sm" style={{ color: "#4A3E36" }}>
               <span>✉</span>
               <a
-                href="mailto:info@ishadama.co.il"
+                href="mailto:admin@ishadama.co.il"
                 className="font-semibold hover:underline"
               >
-                info@ishadama.co.il
+                admin@ishadama.co.il
               </a>
             </p>
           </div>
@@ -154,7 +150,7 @@ export default function LeadForm() {
               </div>
               <div>
                 <label htmlFor="interest" style={labelStyle}>
-                  במה התעניינתם? <span style={{ color: "#B91C1C" }}>*</span>
+                  במה מתעניינים? <span style={{ color: "#B91C1C" }}>*</span>
                 </label>
                 <select
                   id="interest"
@@ -199,7 +195,8 @@ export default function LeadForm() {
                 style={{ marginTop: "4px", accentColor: "#18362A" }}
               />
               <span>
-                קראתי ואני מאשר/ת כי תפנו אליי בנוגע לקורס/קהילה/ייעוץ. ניתן
+                קראתי ואני מאשר/ת כי תפנו אליי בנוגע לקורס/ייעוץ. אישור
+                מהווה הסכמה לקבלת עדכוני מידע ועדכונים שיווקיים. ניתן
                 להסיר מרשימת התפוצה בכל עת.
               </span>
             </label>
