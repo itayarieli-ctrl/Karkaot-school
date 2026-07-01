@@ -13,7 +13,7 @@ const navItems = [
   { label: "אודותינו", href: `${ISH_ADAMA}/אודותינו/` },
 ];
 
-export default function Header() {
+export default function Header({ ctaHref = "#lead" }: { ctaHref?: string }) {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
@@ -73,7 +73,7 @@ export default function Header() {
 
           {/* Desktop CTA */}
           <a
-            href="#lead"
+            href={ctaHref}
             className="hidden shrink-0 rounded-md px-4 py-2 text-sm font-semibold transition hover:opacity-90 md:inline-block"
             style={{ backgroundColor: "#18362A", color: "#FCFBF7" }}
           >
@@ -144,7 +144,7 @@ export default function Header() {
               </a>
             ))}
             <a
-              href="#lead"
+              href={ctaHref}
               onClick={() => setOpen(false)}
               className="mt-6 rounded-md px-4 py-3 text-center text-base font-semibold"
               style={{ backgroundColor: "#18362A", color: "#FCFBF7" }}

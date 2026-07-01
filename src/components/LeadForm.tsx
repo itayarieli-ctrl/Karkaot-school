@@ -29,11 +29,31 @@ const labelStyle: React.CSSProperties = {
   marginBottom: "6px",
 };
 
-export default function LeadForm() {
-  const t = copy.lead;
+type LeadData = {
+  title: string;
+  subtitle: string;
+  contact_email: string;
+  consent: string;
+  success: string;
+};
+
+export default function LeadForm({
+  data,
+  fixedInterest,
+  id = "lead",
+}: {
+  // On a dedicated landing page, pass the page's own copy + a fixed
+  // interest value. When fixedInterest is set the interest dropdown is
+  // hidden and its value is submitted as a hidden field — the lead is
+  // pre-tagged by which page it came from.
+  data?: LeadData;
+  fixedInterest?: "course" | "consult";
+  id?: string;
+}) {
+  const t = data ?? copy.lead;
   const interests = interestValues.map((v) => ({
     value: v,
-    label: t.interest_labels[v as keyof typeof t.interest_labels],
+    label: copy.lead.interest_labels[v as keyof typeof copy.lead.interest_labels],
   }));
 
   const [status, setStatus] = useState<Status>("idle");
@@ -54,7 +74,7 @@ export default function LeadForm() {
       lastName: String(form.get("lastName") || "").trim(),
       email: String(form.get("email") || "").trim(),
       phone: String(form.get("phone") || "").trim(),
-      interest: String(form.get("interest") || ""),
+      interest: fixedInterest ?? String(form.get("interest") || ""),
       consent: true,
     };
 
@@ -77,7 +97,7 @@ export default function LeadForm() {
   }
 
   return (
-    <section id="lead" className="py-20 md:py-28" style={{ backgroundColor: "#4A3E36" }}>
+    <section id={id} className="py-20 md:py-28" style={{ backgroundColor: "#4A3E36" }}>
       <div className="mx-auto max-w-6xl px-5">
         <div
           className="grid gap-8 overflow-hidden rounded-[32px] p-8 shadow-xl md:grid-cols-2 md:p-12"
@@ -155,29 +175,31 @@ export default function LeadForm() {
                   style={inputStyle}
                 />
               </div>
-              <div>
-                <label htmlFor="interest" style={labelStyle}>
-                  במה מתעניינים? <span style={{ color: "#B91C1C" }}>*</span>
-                </label>
-                <select
-                  id="interest"
-                  name="interest"
-                  defaultValue=""
-                  required
-                  style={{ ...inputStyle, appearance: "auto" }}
-                >
-                  <option value="" disabled>
-                    בחרו אפשרות
-                  </option>
-                  {interests.map((i) => (
-                    <option key={i.value} value={i.value}>
-                      {i.label}
+              {!fixedInterest && (
+                <div>
+                  <label htmlFor="interest" style={labelStyle}>
+                    במה מתעניינים? <span style={{ color: "#B91C1C" }}>*</span>
+                  </label>
+                  <select
+                    id="interest"
+                    name="interest"
+                    defaultValue=""
+                    required
+                    style={{ ...inputStyle, appearance: "auto" }}
+                  >
+                    <option value="" disabled>
+                      בחרו אפשרות
                     </option>
-                  ))}
-                </select>
-              </div>
+                    {interests.map((i) => (
+                      <option key={i.value} value={i.value}>
+                        {i.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              )}
 
-              <div className="md:col-span-2">
+              <div className={fixedInterest ? undefined : "md:col-span-2"}>
                 <label htmlFor="email" style={labelStyle}>
                   אימייל <span style={{ color: "#B91C1C" }}>*</span>
                 </label>

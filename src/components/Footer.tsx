@@ -22,10 +22,10 @@ export default function Footer() {
             ניווט
           </h4>
           <ul className="mt-3 space-y-2" style={{ color: "rgba(252, 251, 247, 0.85)" }}>
-            <li><a href="#services" className="hover:opacity-70">קורסים</a></li>
-            <li><a href="#syllabus" className="hover:opacity-70">תוכן הקורס</a></li>
-            <li><a href="#faq" className="hover:opacity-70">שאלות נפוצות</a></li>
-            <li style={{ color: "rgba(252, 251, 247, 0.55)" }}>{t.consultation_soon}</li>
+            <li><a href="/" className="hover:opacity-70">הקורס הדיגיטלי</a></li>
+            <li><a href="/#syllabus" className="hover:opacity-70">תוכן הקורס</a></li>
+            <li><a href="/#faq" className="hover:opacity-70">שאלות נפוצות</a></li>
+            <li><a href="/consult" className="hover:opacity-70">{t.consultation_soon}</a></li>
             <li><a href={ISH_ADAMA} className="hover:opacity-70">{t.back_to_ishadama}</a></li>
           </ul>
         </div>
@@ -41,7 +41,7 @@ export default function Footer() {
                 {t.contact_email}
               </a>
             </li>
-            <li><a href="#lead" className="hover:opacity-70">טופס יצירת קשר</a></li>
+            <li><a href="/#lead" className="hover:opacity-70">טופס יצירת קשר</a></li>
           </ul>
         </div>
       </div>

@@ -1,7 +1,25 @@
 import copy from "../../content/copy.json";
 
-export default function Hero() {
-  const t = copy.hero;
+type HeroData = {
+  badge: string;
+  h1_line1: string;
+  h1_line2: string;
+  subtitle: string;
+  cta_primary: string;
+  cta_secondary: string;
+  image_placeholder: string;
+};
+
+export default function Hero({
+  data = copy.hero,
+  ctaPrimaryHref = "#lead",
+  ctaSecondaryHref = "#syllabus",
+}: {
+  data?: HeroData;
+  ctaPrimaryHref?: string;
+  ctaSecondaryHref?: string;
+}) {
+  const t = data;
   return (
     <section
       className="relative overflow-hidden"
@@ -56,14 +74,14 @@ export default function Hero() {
 
             <div className="mt-10 flex flex-col gap-3 sm:flex-row">
               <a
-                href="#lead"
+                href={ctaPrimaryHref}
                 className="rounded-md px-6 py-3 text-center text-base font-semibold transition hover:opacity-90"
                 style={{ backgroundColor: "#18362A", color: "#FCFBF7" }}
               >
                 {t.cta_primary}
               </a>
               <a
-                href="#services"
+                href={ctaSecondaryHref}
                 className="rounded-md border px-6 py-3 text-center text-base font-semibold transition hover:bg-white"
                 style={{
                   borderColor: "#9E846E",
