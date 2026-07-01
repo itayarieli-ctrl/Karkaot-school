@@ -145,7 +145,7 @@ export default function LeadForm() {
 
               <div>
                 <label htmlFor="phone" style={labelStyle}>
-                  טלפון <span style={{ color: "#B91C1C" }}>*</span>
+                  מספר טלפון <span style={{ color: "#B91C1C" }}>*</span>
                 </label>
                 <input
                   id="phone"
