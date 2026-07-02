@@ -13,7 +13,7 @@ export default function IshAdamaLogo({ variant = "dark", className }: Props) {
     return (
       <Image
         src="/logo/footer-logo.png"
-        alt="איש אדמה — קרקעות בהשקעה בטוחה"
+        alt="איש אדמה - קרקעות בהשקעה בטוחה"
         width={1100}
         height={696}
         className={className}
