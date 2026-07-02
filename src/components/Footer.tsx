@@ -35,12 +35,6 @@ export default function Footer() {
             צרו קשר
           </h4>
           <ul className="mt-3 space-y-2" style={{ color: "rgba(252, 251, 247, 0.85)" }}>
-            <li>
-              דוא&quot;ל:{" "}
-              <a href={`mailto:${t.contact_email}`} className="hover:opacity-70">
-                {t.contact_email}
-              </a>
-            </li>
             <li><a href="/#lead" className="hover:opacity-70">טופס יצירת קשר</a></li>
           </ul>
         </div>
