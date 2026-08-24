@@ -1,20 +1,24 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 import IshAdamaLogo from "./IshAdamaLogo";
 
 const ISH_ADAMA = "https://ishadama.co.il";
 
-const navItems = [
-  { label: "דוגמאות מהשטח", href: `${ISH_ADAMA}/דוגמאות-מהשטח/` },
-  { label: "מאמרים וכתבות", href: `${ISH_ADAMA}/מאמרים-וכתבות/` },
-  { label: "משקיעים ממליצים", href: `${ISH_ADAMA}/משקיעים-ממליצים/` },
-  { label: "לימודי קרקעות", href: "#top", active: true },
-  { label: "אודותינו", href: `${ISH_ADAMA}/אודותינו/` },
-];
-
 export default function Header({ ctaHref = "#lead" }: { ctaHref?: string }) {
   const [open, setOpen] = useState(false);
+  // Both landing pages live in this nav, each marked active on its own route,
+  // so a visitor can reach either product without hunting for a mid-page link.
+  const pathname = usePathname();
+  const navItems = [
+    { label: "דוגמאות מהשטח", href: `${ISH_ADAMA}/דוגמאות-מהשטח/` },
+    { label: "מאמרים וכתבות", href: `${ISH_ADAMA}/מאמרים-וכתבות/` },
+    { label: "משקיעים ממליצים", href: `${ISH_ADAMA}/משקיעים-ממליצים/` },
+    { label: "לימודי קרקעות", href: "/", active: pathname === "/" },
+    { label: "ייעוץ עסקה", href: "/consult", active: pathname === "/consult" },
+    { label: "אודותינו", href: `${ISH_ADAMA}/אודותינו/` },
+  ];
 
   useEffect(() => {
     if (open) {

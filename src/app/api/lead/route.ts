@@ -18,6 +18,13 @@ type ScallaForm = {
   // Consent is a legal record (Israeli spam law) and is unrelated to which
   // product the lead wants — it's still needed even with separate forms.
   consentFieldId?: string;
+  // Scalla custom-field id + value recording WHAT the lead is about.
+  // Separate webforms alone don't solve this: Scalla shows no indication of
+  // which form a lead arrived through, so without an explicit field every
+  // lead looks identical in the CRM. The value is set by the page, never
+  // chosen by the visitor.
+  typeFieldId?: string;
+  typeValue?: string;
 };
 
 const SCALLA_FORMS: Record<FormKey, ScallaForm> = {
@@ -27,7 +34,9 @@ const SCALLA_FORMS: Record<FormKey, ScallaForm> = {
       "d5e856cc8012c8fa4abbe5f1000d7541",
     vtrftk: process.env.SCALLA_COURSE_VTRFTK,
     formName: process.env.SCALLA_COURSE_FORM_NAME || "לימודי קרקעות",
-    consentFieldId: process.env.SCALLA_COURSE_CONSENT_FIELD,
+    consentFieldId: process.env.SCALLA_COURSE_CONSENT_FIELD || "cf_2465",
+    typeFieldId: process.env.SCALLA_TYPE_FIELD || "cf_2662",
+    typeValue: process.env.SCALLA_COURSE_TYPE_VALUE || "לימודי קרקעות",
   },
   consult: {
     publicId:
@@ -35,7 +44,9 @@ const SCALLA_FORMS: Record<FormKey, ScallaForm> = {
       "167912713aaee7b119d3f8cbd45886d6",
     vtrftk: process.env.SCALLA_CONSULT_VTRFTK,
     formName: process.env.SCALLA_CONSULT_FORM_NAME || "ייעוץ לעסקה",
-    consentFieldId: process.env.SCALLA_CONSULT_CONSENT_FIELD,
+    consentFieldId: process.env.SCALLA_CONSULT_CONSENT_FIELD || "cf_2465",
+    typeFieldId: process.env.SCALLA_TYPE_FIELD || "cf_2662",
+    typeValue: process.env.SCALLA_CONSULT_TYPE_VALUE || "ייעוץ לעסקה",
   },
 };
 
@@ -139,6 +150,10 @@ async function forwardToScalla(
   // consented leads reach this point.
   if (cfg.consentFieldId) {
     form.append(cfg.consentFieldId, "כן");
+  }
+  // Lead type, so the CRM record shows what this lead is actually about.
+  if (cfg.typeFieldId && cfg.typeValue) {
+    form.append(cfg.typeFieldId, cfg.typeValue);
   }
 
   try {
