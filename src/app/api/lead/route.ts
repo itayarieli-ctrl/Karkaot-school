@@ -18,11 +18,12 @@ type ScallaForm = {
   // Consent is a legal record (Israeli spam law) and is unrelated to which
   // product the lead wants — it's still needed even with separate forms.
   consentFieldId?: string;
-  // Scalla custom-field id + value recording WHAT the lead is about.
-  // Separate webforms alone don't solve this: Scalla shows no indication of
-  // which form a lead arrived through, so without an explicit field every
-  // lead looks identical in the CRM. The value is set by the page, never
-  // chosen by the visitor.
+  // Optional lead-type field. Currently unset: neither webform defines such
+  // a field, so anything sent here is discarded by Scalla. The better place
+  // to solve this is in Scalla itself — add a lead-type field to each webform
+  // with a fixed "ביטול ערך" (override value) per form, and the CRM tags
+  // every lead by origin with no involvement from the website at all.
+  // Kept configurable in case a field is added later.
   typeFieldId?: string;
   typeValue?: string;
 };
@@ -33,20 +34,26 @@ const SCALLA_FORMS: Record<FormKey, ScallaForm> = {
       process.env.SCALLA_COURSE_PUBLIC_ID ||
       "d5e856cc8012c8fa4abbe5f1000d7541",
     vtrftk: process.env.SCALLA_COURSE_VTRFTK,
-    formName: process.env.SCALLA_COURSE_FORM_NAME || "לימודי קרקעות",
+    // Exact webform name as configured in Scalla — must match.
+    formName: process.env.SCALLA_COURSE_FORM_NAME || "טופס לימודים",
+    // Required on the form. This one also has a Scalla-side override value,
+    // so Scalla fills it regardless, but we send the visitor's real answer.
     consentFieldId: process.env.SCALLA_COURSE_CONSENT_FIELD || "cf_2465",
-    typeFieldId: process.env.SCALLA_TYPE_FIELD || "cf_2662",
-    typeValue: process.env.SCALLA_COURSE_TYPE_VALUE || "לימודי קרקעות",
+    typeFieldId: process.env.SCALLA_TYPE_FIELD,
+    typeValue: process.env.SCALLA_COURSE_TYPE_VALUE,
   },
   consult: {
     publicId:
       process.env.SCALLA_CONSULT_PUBLIC_ID ||
       "167912713aaee7b119d3f8cbd45886d6",
     vtrftk: process.env.SCALLA_CONSULT_VTRFTK,
-    formName: process.env.SCALLA_CONSULT_FORM_NAME || "ייעוץ לעסקה",
+    // Exact webform name as configured in Scalla — must match.
+    formName: process.env.SCALLA_CONSULT_FORM_NAME || "טופס ייעוץ או לימודים",
+    // Required on the form and, unlike the course form, it has NO Scalla-side
+    // override value — so the submission is rejected unless we send it.
     consentFieldId: process.env.SCALLA_CONSULT_CONSENT_FIELD || "cf_2465",
-    typeFieldId: process.env.SCALLA_TYPE_FIELD || "cf_2662",
-    typeValue: process.env.SCALLA_CONSULT_TYPE_VALUE || "ייעוץ לעסקה",
+    typeFieldId: process.env.SCALLA_TYPE_FIELD,
+    typeValue: process.env.SCALLA_CONSULT_TYPE_VALUE,
   },
 };
 
