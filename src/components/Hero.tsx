@@ -1,40 +1,98 @@
-export default function Hero() {
-  return (
-    <section className="relative overflow-hidden border-b border-stone-200 bg-gradient-to-b from-stone-100 to-stone-50">
-      <div className="mx-auto max-w-6xl px-5 py-20 md:py-28">
-        <div className="max-w-3xl">
-          <span className="inline-block rounded-full bg-green-800/10 px-3 py-1 text-xs font-semibold text-green-900">
-            פלטפורמת לימוד בלתי תלויה לעולם הקרקעות בישראל
-          </span>
-          <h1 className="mt-6 text-4xl font-extrabold leading-tight tracking-tight text-stone-900 md:text-6xl">
-            ללמוד קרקעות לעומק.
-            <br />
-            <span className="text-green-800">בלי הבטחות. עם שקיפות.</span>
-          </h1>
-          <p className="mt-6 text-lg leading-relaxed text-stone-700 md:text-xl">
-            קורס דיגיטלי, קהילת לומדים, וייעוץ אישי לעסקאות קונקרטיות —
-            מאלעד אדליס מנצור, יזם ומשקיע נדל&quot;ן עם 15 שנות ניסיון
-            בקרקעות בישראל ובחו&quot;ל.
-          </p>
+import copy from "../../content/copy.json";
 
-          <div className="mt-10 flex flex-col gap-3 sm:flex-row">
-            <a
-              href="#lead"
-              className="rounded-md bg-green-800 px-6 py-3 text-center text-base font-semibold text-stone-50 transition hover:bg-green-900"
+type HeroData = {
+  badge: string;
+  h1_line1: string;
+  h1_line2: string;
+  subtitle: string;
+  cta_primary: string;
+  cta_secondary: string;
+  image_placeholder: string;
+};
+
+export default function Hero({
+  data = copy.hero,
+  ctaPrimaryHref = "#lead",
+  ctaSecondaryHref = "#syllabus",
+}: {
+  data?: HeroData;
+  ctaPrimaryHref?: string;
+  ctaSecondaryHref?: string;
+}) {
+  const t = data;
+  return (
+    <section
+      className="relative overflow-hidden"
+      style={{
+        background: "linear-gradient(to bottom, #F2EEE9, #FCFBF7)",
+        borderBottom: "1px solid #E8E2DA",
+      }}
+    >
+      <div className="mx-auto max-w-6xl px-5 py-20 md:py-28">
+        <div className="grid items-center gap-12 md:grid-cols-2">
+          {/* Image placeholder — replace with actual photo when provided */}
+          <div
+            className="order-2 aspect-[4/3] w-full overflow-hidden rounded-2xl border md:order-1"
+            style={{
+              backgroundColor: "#F2EEE9",
+              borderColor: "#E8E2DA",
+            }}
+            data-image-slot="hero"
+          >
+            <div
+              className="flex h-full w-full items-center justify-center text-sm font-medium"
+              style={{ color: "#9E846E" }}
             >
-              הצטרפו לרשימת ההמתנה
-            </a>
-            <a
-              href="#services"
-              className="rounded-md border border-stone-300 bg-stone-50 px-6 py-3 text-center text-base font-semibold text-stone-800 transition hover:bg-stone-100"
-            >
-              מה השירותים שלנו →
-            </a>
+              {t.image_placeholder}
+            </div>
           </div>
 
-          <p className="mt-6 text-sm text-stone-500">
-            * הצטרפות לרשימה לא מחייבת ברכישה. אין דחיפת מכירות.
-          </p>
+          <div className="order-1 md:order-2">
+            <span
+              className="inline-block rounded-full px-3 py-1 text-xs font-semibold"
+              style={{
+                backgroundColor: "rgba(159, 199, 148, 0.35)",
+                color: "#18362A",
+              }}
+            >
+              {t.badge}
+            </span>
+            <h1
+              className="mt-6 text-4xl font-extrabold leading-tight tracking-tight md:text-6xl"
+              style={{ color: "#4A3E36" }}
+            >
+              {t.h1_line1}
+              <br />
+              <span style={{ color: "#18362A" }}>{t.h1_line2}</span>
+            </h1>
+            <p
+              className="mt-6 text-lg leading-relaxed md:text-xl"
+              style={{ color: "#0D1C16" }}
+            >
+              {t.subtitle}
+            </p>
+
+            <div className="mt-10 flex flex-col gap-3 sm:flex-row">
+              <a
+                href={ctaPrimaryHref}
+                className="rounded-md px-6 py-3 text-center text-base font-semibold transition hover:opacity-90"
+                style={{ backgroundColor: "#18362A", color: "#FCFBF7" }}
+              >
+                {t.cta_primary}
+              </a>
+              <a
+                href={ctaSecondaryHref}
+                className="rounded-md border px-6 py-3 text-center text-base font-semibold transition hover:bg-white"
+                style={{
+                  borderColor: "#9E846E",
+                  color: "#4A3E36",
+                  backgroundColor: "transparent",
+                }}
+              >
+                {t.cta_secondary}
+              </a>
+            </div>
+          </div>
         </div>
       </div>
     </section>

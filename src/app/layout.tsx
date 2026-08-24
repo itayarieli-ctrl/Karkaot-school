@@ -1,21 +1,22 @@
 import type { Metadata } from "next";
-import { Heebo } from "next/font/google";
+import { Arimo } from "next/font/google";
 import "./globals.css";
 
-const heebo = Heebo({
-  variable: "--font-heebo",
+const arimo = Arimo({
+  variable: "--font-arimo",
   subsets: ["hebrew", "latin"],
+  weight: ["400", "500", "600", "700"],
   display: "swap",
 });
 
 export const metadata: Metadata = {
-  title: "קרקע 101 — לימוד וייעוץ להשקעות בקרקע בישראל",
+  title: "לימודי קרקעות | איש אדמה - קורס וייעוץ להשקעות בקרקע בישראל",
   description:
-    "המקום שלומדים בו על קרקעות בישראל. קורס דיגיטלי, קהילה, וייעוץ מקצועי לעסקאות קונקרטיות. בלי הבטחות, עם שקיפות מלאה.",
+    "קורס מוקלט בגישה חופשית, קורס פרונטלי אישי, וייעוץ מקצועי לעסקאות קרקע קונקרטיות. מאלעד אדליס מנצור, מייסד איש אדמה.",
   openGraph: {
-    title: "קרקע 101 — לימוד וייעוץ להשקעות בקרקע בישראל",
+    title: "לימודי קרקעות | איש אדמה",
     description:
-      "המקום שלומדים בו על קרקעות בישראל. קורס, קהילה, וייעוץ עסקאות.",
+      "קורס וייעוץ להשקעות בקרקע בישראל - מאלעד אדליס מנצור.",
     locale: "he_IL",
     type: "website",
   },
@@ -30,9 +31,9 @@ export default function RootLayout({
     <html
       lang="he"
       dir="rtl"
-      className={`${heebo.variable} h-full antialiased`}
+      className={`${arimo.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-stone-50 text-stone-900">
+      <body className="min-h-full flex flex-col">
         {children}
       </body>
     </html>

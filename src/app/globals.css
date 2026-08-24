@@ -1,11 +1,19 @@
 @import "tailwindcss";
 
 @theme inline {
-  --font-sans: var(--font-heebo);
-  --color-background: #fafaf9;
-  --color-foreground: #1c1917;
-  --color-brand: #166534;
-  --color-brand-light: #16653418;
+  --font-sans: var(--font-arimo);
+
+  --color-cream: #FCFBF7;
+  --color-cream-soft: #F2EEE9;
+  --color-ink: #0D1C16;
+  --color-brown: #4A3E36;
+  --color-brown-soft: #9E846E;
+  --color-mustard: #C59459;
+  --color-forest: #18362A;
+  --color-forest-deep: #0D1C16;
+  --color-olive: #436B38;
+  --color-sage: #9FC794;
+  --color-border-soft: #E8E2DA;
 }
 
 html {
@@ -15,4 +23,36 @@ html {
 body {
   font-family: var(--font-sans), system-ui, sans-serif;
   font-feature-settings: "kern";
+  background: #FCFBF7;
+  color: #0D1C16;
+}
+
+.marker-bg {
+  background-color: rgba(159, 199, 148, 0.45);
+  padding: 0.05em 0.4em;
+  border-radius: 2px;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+.section-divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 1rem;
+}
+.section-divider::before,
+.section-divider::after {
+  content: "";
+  display: block;
+  width: 60px;
+  height: 1px;
+  background-color: #9FC794;
+}
+.section-divider .dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background-color: #9FC794;
 }
