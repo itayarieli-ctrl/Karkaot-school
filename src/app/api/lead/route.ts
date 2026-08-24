@@ -1,20 +1,49 @@
 import { NextResponse } from "next/server";
 
-// Map the form's interest values to Scalla's cf_2662 dropdown options.
-// Form has two options matching Scalla's exactly.
-const INTEREST_TO_SCALLA: Record<string, string> = {
-  course: "לימודי קרקעות",
-  consult: "ייעוץ לעסקה",
+// Each landing page posts to its OWN Scalla webform, so leads are separated
+// at the CRM level (own pipeline / notifications / reporting) instead of by a
+// dropdown the visitor has to pick. The page decides — never the visitor.
+//
+// publicid values are public by design (they ship in any page embedding the
+// form), so they're safe as in-repo defaults. __vtrftk is a per-form token
+// that can expire, so it lives in env vars and can be rotated without a code
+// change.
+type FormKey = "course" | "consult";
+
+type ScallaForm = {
+  publicId?: string;
+  vtrftk?: string;
+  formName: string;
+  // Scalla custom-field id for the marketing-consent field on THIS form.
+  // Consent is a legal record (Israeli spam law) and is unrelated to which
+  // product the lead wants — it's still needed even with separate forms.
+  consentFieldId?: string;
 };
 
-const ALLOWED_INTERESTS = Object.keys(INTEREST_TO_SCALLA);
+const SCALLA_FORMS: Record<FormKey, ScallaForm> = {
+  course: {
+    publicId:
+      process.env.SCALLA_COURSE_PUBLIC_ID ||
+      "d5e856cc8012c8fa4abbe5f1000d7541",
+    vtrftk: process.env.SCALLA_COURSE_VTRFTK,
+    formName: process.env.SCALLA_COURSE_FORM_NAME || "לימודי קרקעות",
+    consentFieldId: process.env.SCALLA_COURSE_CONSENT_FIELD,
+  },
+  consult: {
+    publicId:
+      process.env.SCALLA_CONSULT_PUBLIC_ID ||
+      "167912713aaee7b119d3f8cbd45886d6",
+    vtrftk: process.env.SCALLA_CONSULT_VTRFTK,
+    formName: process.env.SCALLA_CONSULT_FORM_NAME || "ייעוץ לעסקה",
+    consentFieldId: process.env.SCALLA_CONSULT_CONSENT_FIELD,
+  },
+};
+
+const ALLOWED_INTERESTS = Object.keys(SCALLA_FORMS);
 
 const SCALLA_URL =
   process.env.SCALLA_CAPTURE_URL ||
   "https://api.scallacrm.co.il/modules/Webforms/capture.php";
-const SCALLA_PUBLIC_ID = process.env.SCALLA_PUBLIC_ID;
-const SCALLA_VTRFTK = process.env.SCALLA_VTRFTK;
-const SCALLA_FORM_NAME = process.env.SCALLA_FORM_NAME || "טופס ייעוץ או לימודים";
 
 type Payload = {
   firstName: string;
@@ -79,22 +108,32 @@ export async function POST(req: Request) {
 async function forwardToScalla(
   p: Payload
 ): Promise<{ ok: true } | { ok: false; detail: string }> {
-  if (!SCALLA_PUBLIC_ID || !SCALLA_VTRFTK) {
+  const cfg = SCALLA_FORMS[p.interest as FormKey];
+  if (!cfg) {
+    return { ok: false, detail: `No Scalla form mapped for "${p.interest}"` };
+  }
+  if (!cfg.publicId || !cfg.vtrftk) {
     // Misconfiguration — better to fail loud so we don't silently swallow leads
-    return { ok: false, detail: "Scalla env vars not configured" };
+    return {
+      ok: false,
+      detail: `Scalla ${p.interest} form not configured (missing publicid/__vtrftk)`,
+    };
   }
 
   const form = new URLSearchParams();
-  form.append("publicid", SCALLA_PUBLIC_ID);
-  form.append("__vtrftk", SCALLA_VTRFTK);
+  form.append("publicid", cfg.publicId);
+  form.append("__vtrftk", cfg.vtrftk);
   form.append("urlencodeenable", "1");
-  form.append("name", SCALLA_FORM_NAME);
+  form.append("name", cfg.formName);
   form.append("lastname", p.lastName);
   form.append("firstname", p.firstName);
   form.append("email", p.email);
   form.append("mobile", p.phone);
-  form.append("cf_2465", "כן"); // consent — only true reaches here
-  form.append("cf_2662", INTEREST_TO_SCALLA[p.interest] ?? p.interest);
+  // Consent is only recorded when we know this form's field id; only
+  // consented leads reach this point.
+  if (cfg.consentFieldId) {
+    form.append(cfg.consentFieldId, "כן");
+  }
 
   try {
     const res = await fetch(SCALLA_URL, {
