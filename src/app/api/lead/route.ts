@@ -26,7 +26,34 @@ type ScallaForm = {
   // Kept configurable in case a field is added later.
   typeFieldId?: string;
   typeValue?: string;
+  // Human label for the product this form represents. Used in the
+  // "last inquiry" field value below so the CRM shows what the lead is about.
+  label: string;
 };
+
+// One custom field on the Lead module, written on EVERY submission with a
+// value that ALWAYS changes (it embeds a timestamp). Two problems, one field:
+//   1. A returning lead sends identical name/email/phone, so nothing on the
+//      record changes and no Scalla workflow can fire. A value that changes
+//      every time gives Scalla something to trigger a WhatsApp/notification on.
+//   2. It also carries the lead type ("ייעוץ לעסקה" / "לימודי קרקעות"), so the
+//      CRM shows what the lead wants even when leads look otherwise identical.
+// Create the field in Scalla, map it in both webforms, and put its cf_ id in
+// SCALLA_LAST_INQUIRY_FIELD (or hardcode the default below once known).
+const LAST_INQUIRY_FIELD = process.env.SCALLA_LAST_INQUIRY_FIELD;
+
+function lastInquiryValue(label: string): string {
+  // Israel local time, readable — the timestamp is what makes it always change.
+  const now = new Intl.DateTimeFormat("he-IL", {
+    timeZone: "Asia/Jerusalem",
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  }).format(new Date());
+  return `${label} · ${now}`;
+}
 
 const SCALLA_FORMS: Record<FormKey, ScallaForm> = {
   course: {
@@ -41,6 +68,7 @@ const SCALLA_FORMS: Record<FormKey, ScallaForm> = {
     consentFieldId: process.env.SCALLA_COURSE_CONSENT_FIELD || "cf_2465",
     typeFieldId: process.env.SCALLA_TYPE_FIELD,
     typeValue: process.env.SCALLA_COURSE_TYPE_VALUE,
+    label: process.env.SCALLA_COURSE_LABEL || "לימודי קרקעות",
   },
   consult: {
     publicId:
@@ -54,6 +82,7 @@ const SCALLA_FORMS: Record<FormKey, ScallaForm> = {
     consentFieldId: process.env.SCALLA_CONSULT_CONSENT_FIELD || "cf_2465",
     typeFieldId: process.env.SCALLA_TYPE_FIELD,
     typeValue: process.env.SCALLA_CONSULT_TYPE_VALUE,
+    label: process.env.SCALLA_CONSULT_LABEL || "ייעוץ לעסקה",
   },
 };
 
@@ -161,6 +190,11 @@ async function forwardToScalla(
   // Lead type, so the CRM record shows what this lead is actually about.
   if (cfg.typeFieldId && cfg.typeValue) {
     form.append(cfg.typeFieldId, cfg.typeValue);
+  }
+  // Always-changing "last inquiry" value (label + timestamp) so a returning
+  // lead still updates a field and Scalla can fire a WhatsApp/notification.
+  if (LAST_INQUIRY_FIELD) {
+    form.append(LAST_INQUIRY_FIELD, lastInquiryValue(cfg.label));
   }
 
   try {
