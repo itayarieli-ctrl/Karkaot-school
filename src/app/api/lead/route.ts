@@ -112,17 +112,23 @@ async function forwardToScalla(
   if (!cfg) {
     return { ok: false, detail: `No Scalla form mapped for "${p.interest}"` };
   }
-  if (!cfg.publicId || !cfg.vtrftk) {
+  if (!cfg.publicId) {
     // Misconfiguration — better to fail loud so we don't silently swallow leads
     return {
       ok: false,
-      detail: `Scalla ${p.interest} form not configured (missing publicid/__vtrftk)`,
+      detail: `Scalla ${p.interest} form not configured (missing publicid)`,
     };
   }
 
   const form = new URLSearchParams();
   form.append("publicid", cfg.publicId);
-  form.append("__vtrftk", cfg.vtrftk);
+  // __vtrftk is Vtiger's anti-forgery token from the generated webform HTML.
+  // Whether Scalla's capture endpoint actually enforces it is unverified, so
+  // it's optional: sent when configured, omitted otherwise. If leads are
+  // rejected without it, grab a fresh value and set the env var.
+  if (cfg.vtrftk) {
+    form.append("__vtrftk", cfg.vtrftk);
+  }
   form.append("urlencodeenable", "1");
   form.append("name", cfg.formName);
   form.append("lastname", p.lastName);
@@ -154,7 +160,18 @@ async function forwardToScalla(
     if (res.status === 200 || res.status === 302 || res.status === 303) {
       return { ok: true };
     }
-    return { ok: false, detail: `HTTP ${res.status}` };
+    // Include a snippet of the response so a rejection tells us WHY
+    // (e.g. a missing/expired __vtrftk) instead of just a status code.
+    let snippet = "";
+    try {
+      snippet = (await res.text()).slice(0, 300).replace(/\s+/g, " ").trim();
+    } catch {
+      /* body unavailable — status alone will have to do */
+    }
+    return {
+      ok: false,
+      detail: `HTTP ${res.status}${snippet ? ` — ${snippet}` : ""}`,
+    };
   } catch (err) {
     return {
       ok: false,
