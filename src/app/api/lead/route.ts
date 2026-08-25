@@ -1,49 +1,76 @@
 import { NextResponse } from "next/server";
 
-// Each landing page posts to its OWN Scalla webform, so leads are separated
-// at the CRM level (own pipeline / notifications / reporting) instead of by a
-// dropdown the visitor has to pick. The page decides — never the visitor.
+// ============================================================================
+// ⚙️  SCALLA CONFIG — the single place to edit CRM wiring.
+// ----------------------------------------------------------------------------
+// Each landing page posts to its OWN Scalla webform, so leads are separated at
+// the CRM level. The page decides the type — the visitor never picks.
 //
-// publicid values are public by design (they ship in any page embedding the
-// form), so they're safe as in-repo defaults. __vtrftk is a per-form token
-// that can expire, so it lives in env vars and can be rotated without a code
-// change.
-type FormKey = "course" | "consult";
+// SAFETY RULE: an unset field id (undefined) is simply NOT sent. Sending a
+// value to a field that doesn't exist in the webform makes Scalla reject the
+// WHOLE submission — so anything not yet created in Scalla is left undefined
+// here and stays inert. Filling these in later is a one-line change per field
+// and does not touch the working form. See docs/LEADS_ARCHITECTURE.md.
+// ============================================================================
 
-type ScallaForm = {
-  publicId?: string;
-  vtrftk?: string;
-  formName: string;
-  // Scalla custom-field id for the marketing-consent field on THIS form.
-  // Consent is a legal record (Israeli spam law) and is unrelated to which
-  // product the lead wants — it's still needed even with separate forms.
-  consentFieldId?: string;
-  // Optional lead-type field. Currently unset: neither webform defines such
-  // a field, so anything sent here is discarded by Scalla. The better place
-  // to solve this is in Scalla itself — add a lead-type field to each webform
-  // with a fixed "ביטול ערך" (override value) per form, and the CRM tags
-  // every lead by origin with no involvement from the website at all.
-  // Kept configurable in case a field is added later.
-  typeFieldId?: string;
-  typeValue?: string;
-  // Human label for the product this form represents. Used in the
-  // "last inquiry" field value below so the CRM shows what the lead is about.
-  label: string;
+// -- Lead type values (decided now; just strings until a field carries them) --
+// If the Scalla field ends up being a dropdown, these must match its options
+// EXACTLY. "investment" arrives via the main-site form, not these pages —
+// listed here only so the vocabulary lives in one place.
+const LEAD_TYPE = {
+  course: "לימודי קרקעות",
+  consult: "ייעוץ לעסקה",
+  investment: "השקעה",
+} as const;
+
+// -- Scalla custom-field ids -------------------------------------------------
+// cf_2465 (consent) EXISTS on both webforms and is verified — active.
+// The other two do NOT exist in Scalla yet → left undefined (inert). When you
+// create them, put the cf_ id here (or in the matching env var) to activate.
+const SCALLA_FIELDS = {
+  // Marketing consent — legal record (Israeli spam law). Required on the forms.
+  consent: process.env.SCALLA_CONSENT_FIELD || "cf_2465", // ✅ active
+  // Lead type for clean CRM filtering/reporting (course / consult / investment).
+  leadType: process.env.SCALLA_TYPE_FIELD || undefined, // ⏳ TODO: create in Scalla
+  // "Last inquiry" — value ALWAYS changes (carries a timestamp) so a returning
+  // lead updates a field and a Scalla workflow can fire a WhatsApp/alert.
+  lastInquiry: process.env.SCALLA_LAST_INQUIRY_FIELD || undefined, // ⏳ TODO
 };
 
-// One custom field on the Lead module, written on EVERY submission with a
-// value that ALWAYS changes (it embeds a timestamp). Two problems, one field:
-//   1. A returning lead sends identical name/email/phone, so nothing on the
-//      record changes and no Scalla workflow can fire. A value that changes
-//      every time gives Scalla something to trigger a WhatsApp/notification on.
-//   2. It also carries the lead type ("ייעוץ לעסקה" / "לימודי קרקעות"), so the
-//      CRM shows what the lead wants even when leads look otherwise identical.
-// Create the field in Scalla, map it in both webforms, and put its cf_ id in
-// SCALLA_LAST_INQUIRY_FIELD (or hardcode the default below once known).
-const LAST_INQUIRY_FIELD = process.env.SCALLA_LAST_INQUIRY_FIELD;
+// -- Per-webform identity (these DO exist and are active) --------------------
+type FormKey = "course" | "consult";
+type ScallaForm = {
+  publicId: string; // public by design (ships in any embedding page)
+  formName: string; // must match the webform name in Scalla EXACTLY
+  vtrftk?: string; // anti-forgery token; Scalla doesn't enforce it in practice
+  type: keyof typeof LEAD_TYPE;
+};
 
-function lastInquiryValue(label: string): string {
-  // Israel local time, readable — the timestamp is what makes it always change.
+const SCALLA_FORMS: Record<FormKey, ScallaForm> = {
+  course: {
+    publicId: process.env.SCALLA_COURSE_PUBLIC_ID || "d5e856cc8012c8fa4abbe5f1000d7541",
+    formName: process.env.SCALLA_COURSE_FORM_NAME || "טופס לימודים",
+    vtrftk: process.env.SCALLA_COURSE_VTRFTK,
+    type: "course",
+  },
+  consult: {
+    publicId: process.env.SCALLA_CONSULT_PUBLIC_ID || "167912713aaee7b119d3f8cbd45886d6",
+    formName: process.env.SCALLA_CONSULT_FORM_NAME || "טופס ייעוץ או לימודים",
+    vtrftk: process.env.SCALLA_CONSULT_VTRFTK,
+    type: "consult",
+  },
+};
+// ============================================================================
+
+const ALLOWED_INTERESTS = Object.keys(SCALLA_FORMS);
+
+const SCALLA_URL =
+  process.env.SCALLA_CAPTURE_URL ||
+  "https://api.scallacrm.co.il/modules/Webforms/capture.php";
+
+// Readable Israel-local timestamp — the part that makes "last inquiry" always
+// change, so returning leads still trigger a Scalla workflow.
+function lastInquiryValue(typeLabel: string): string {
   const now = new Intl.DateTimeFormat("he-IL", {
     timeZone: "Asia/Jerusalem",
     day: "2-digit",
@@ -52,45 +79,8 @@ function lastInquiryValue(label: string): string {
     hour: "2-digit",
     minute: "2-digit",
   }).format(new Date());
-  return `${label} · ${now}`;
+  return `${typeLabel} · ${now}`;
 }
-
-const SCALLA_FORMS: Record<FormKey, ScallaForm> = {
-  course: {
-    publicId:
-      process.env.SCALLA_COURSE_PUBLIC_ID ||
-      "d5e856cc8012c8fa4abbe5f1000d7541",
-    vtrftk: process.env.SCALLA_COURSE_VTRFTK,
-    // Exact webform name as configured in Scalla — must match.
-    formName: process.env.SCALLA_COURSE_FORM_NAME || "טופס לימודים",
-    // Required on the form. This one also has a Scalla-side override value,
-    // so Scalla fills it regardless, but we send the visitor's real answer.
-    consentFieldId: process.env.SCALLA_COURSE_CONSENT_FIELD || "cf_2465",
-    typeFieldId: process.env.SCALLA_TYPE_FIELD,
-    typeValue: process.env.SCALLA_COURSE_TYPE_VALUE,
-    label: process.env.SCALLA_COURSE_LABEL || "לימודי קרקעות",
-  },
-  consult: {
-    publicId:
-      process.env.SCALLA_CONSULT_PUBLIC_ID ||
-      "167912713aaee7b119d3f8cbd45886d6",
-    vtrftk: process.env.SCALLA_CONSULT_VTRFTK,
-    // Exact webform name as configured in Scalla — must match.
-    formName: process.env.SCALLA_CONSULT_FORM_NAME || "טופס ייעוץ או לימודים",
-    // Required on the form and, unlike the course form, it has NO Scalla-side
-    // override value — so the submission is rejected unless we send it.
-    consentFieldId: process.env.SCALLA_CONSULT_CONSENT_FIELD || "cf_2465",
-    typeFieldId: process.env.SCALLA_TYPE_FIELD,
-    typeValue: process.env.SCALLA_CONSULT_TYPE_VALUE,
-    label: process.env.SCALLA_CONSULT_LABEL || "ייעוץ לעסקה",
-  },
-};
-
-const ALLOWED_INTERESTS = Object.keys(SCALLA_FORMS);
-
-const SCALLA_URL =
-  process.env.SCALLA_CAPTURE_URL ||
-  "https://api.scallacrm.co.il/modules/Webforms/capture.php";
 
 type Payload = {
   firstName: string;
@@ -167,12 +157,12 @@ async function forwardToScalla(
     };
   }
 
+  const typeLabel = LEAD_TYPE[cfg.type];
+
   const form = new URLSearchParams();
   form.append("publicid", cfg.publicId);
-  // __vtrftk is Vtiger's anti-forgery token from the generated webform HTML.
-  // Whether Scalla's capture endpoint actually enforces it is unverified, so
-  // it's optional: sent when configured, omitted otherwise. If leads are
-  // rejected without it, grab a fresh value and set the env var.
+  // __vtrftk: optional anti-forgery token; Scalla doesn't enforce it in
+  // practice, so it's sent only if configured.
   if (cfg.vtrftk) {
     form.append("__vtrftk", cfg.vtrftk);
   }
@@ -182,19 +172,17 @@ async function forwardToScalla(
   form.append("firstname", p.firstName);
   form.append("email", p.email);
   form.append("mobile", p.phone);
-  // Consent is only recorded when we know this form's field id; only
-  // consented leads reach this point.
-  if (cfg.consentFieldId) {
-    form.append(cfg.consentFieldId, "כן");
+  // Consent (active). Only consented leads reach this point.
+  if (SCALLA_FIELDS.consent) {
+    form.append(SCALLA_FIELDS.consent, "כן");
   }
-  // Lead type, so the CRM record shows what this lead is actually about.
-  if (cfg.typeFieldId && cfg.typeValue) {
-    form.append(cfg.typeFieldId, cfg.typeValue);
+  // Lead type + last-inquiry: sent only once their fields exist in Scalla
+  // (ids filled into SCALLA_FIELDS above). Inert until then — see the config.
+  if (SCALLA_FIELDS.leadType) {
+    form.append(SCALLA_FIELDS.leadType, typeLabel);
   }
-  // Always-changing "last inquiry" value (label + timestamp) so a returning
-  // lead still updates a field and Scalla can fire a WhatsApp/notification.
-  if (LAST_INQUIRY_FIELD) {
-    form.append(LAST_INQUIRY_FIELD, lastInquiryValue(cfg.label));
+  if (SCALLA_FIELDS.lastInquiry) {
+    form.append(SCALLA_FIELDS.lastInquiry, lastInquiryValue(typeLabel));
   }
 
   try {
