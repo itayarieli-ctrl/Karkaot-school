@@ -7,6 +7,7 @@ import CrossLink from "@/components/CrossLink";
 import LeadForm from "@/components/LeadForm";
 import Footer from "@/components/Footer";
 import copy from "../../../content/copy.json";
+import { COURSE_URL } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "ייעוץ עסקת קרקע | לימודי קרקעות - איש אדמה",
@@ -29,12 +30,12 @@ export default function ConsultPage() {
   const c = copy.consult;
   return (
     <>
-      <Header ctaHref="#consult-lead" />
+      <Header ctaHref="#consult-lead" active="consult" />
       <main className="flex-1">
         <Hero
           data={c.hero}
           ctaPrimaryHref="#consult-lead"
-          ctaSecondaryHref="/"
+          ctaSecondaryHref={COURSE_URL}
         />
 
         {/* When it's for you — 3 trigger scenarios */}
@@ -107,7 +108,7 @@ export default function ConsultPage() {
         <CrossLink
           prompt={copy.cross_links.to_course}
           cta={copy.cross_links.to_course_cta}
-          href="/"
+          href={COURSE_URL}
         />
 
         <LeadForm data={c.lead} fixedInterest="consult" id="consult-lead" />

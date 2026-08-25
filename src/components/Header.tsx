@@ -1,22 +1,29 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { usePathname } from "next/navigation";
 import IshAdamaLogo from "./IshAdamaLogo";
+import { COURSE_URL, CONSULT_URL } from "@/lib/site";
 
 const ISH_ADAMA = "https://ishadama.co.il";
 
-export default function Header({ ctaHref = "#lead" }: { ctaHref?: string }) {
+export default function Header({
+  ctaHref = "#lead",
+  active,
+}: {
+  ctaHref?: string;
+  active?: "course" | "consult";
+}) {
   const [open, setOpen] = useState(false);
-  // Both landing pages live in this nav, each marked active on its own route,
-  // so a visitor can reach either product without hunting for a mid-page link.
-  const pathname = usePathname();
+  // Both products live in this nav, each pointing at its own (possibly
+  // cross-subdomain) URL. The current one is passed in explicitly by the page,
+  // so the active state is correct even on the consult subdomain where the
+  // path is "/" but the page shown is the consult page.
   const navItems = [
     { label: "דוגמאות מהשטח", href: `${ISH_ADAMA}/דוגמאות-מהשטח/` },
     { label: "מאמרים וכתבות", href: `${ISH_ADAMA}/מאמרים-וכתבות/` },
     { label: "משקיעים ממליצים", href: `${ISH_ADAMA}/משקיעים-ממליצים/` },
-    { label: "לימודי קרקעות", href: "/", active: pathname === "/" },
-    { label: "ייעוץ עסקה", href: "/consult", active: pathname === "/consult" },
+    { label: "לימודי קרקעות", href: COURSE_URL, active: active === "course" },
+    { label: "ייעוץ עסקה", href: CONSULT_URL, active: active === "consult" },
     { label: "אודותינו", href: `${ISH_ADAMA}/אודותינו/` },
   ];
 

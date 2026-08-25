@@ -6,6 +6,7 @@ import CrossLink from "@/components/CrossLink";
 import LeadForm from "@/components/LeadForm";
 import Footer from "@/components/Footer";
 import copy from "../../content/copy.json";
+import { CONSULT_URL } from "@/lib/site";
 
 // COURSE landing page (/). Single-intent: everything points at one action —
 // signing up for the course. Consultation is reachable only via the soft
@@ -13,7 +14,7 @@ import copy from "../../content/copy.json";
 export default function Home() {
   return (
     <>
-      <Header ctaHref="#lead" />
+      <Header ctaHref="#lead" active="course" />
       <main className="flex-1">
         <Hero
           data={copy.hero}
@@ -25,7 +26,7 @@ export default function Home() {
         <CrossLink
           prompt={copy.cross_links.to_consult}
           cta={copy.cross_links.to_consult_cta}
-          href="/consult"
+          href={CONSULT_URL}
         />
         <LeadForm data={copy.lead} fixedInterest="course" id="lead" />
       </main>

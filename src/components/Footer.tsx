@@ -1,5 +1,6 @@
 import IshAdamaLogo from "./IshAdamaLogo";
 import copy from "../../content/copy.json";
+import { COURSE_URL, CONSULT_URL, courseAnchor } from "@/lib/site";
 
 const ISH_ADAMA = "https://ishadama.co.il";
 
@@ -22,10 +23,10 @@ export default function Footer() {
             ניווט
           </h4>
           <ul className="mt-3 space-y-2" style={{ color: "rgba(252, 251, 247, 0.85)" }}>
-            <li><a href="/" className="hover:opacity-70">הקורס הדיגיטלי</a></li>
-            <li><a href="/#syllabus" className="hover:opacity-70">תוכן הקורס</a></li>
-            <li><a href="/#faq" className="hover:opacity-70">שאלות נפוצות</a></li>
-            <li><a href="/consult" className="hover:opacity-70">{t.consultation_soon}</a></li>
+            <li><a href={COURSE_URL} className="hover:opacity-70">הקורס הדיגיטלי</a></li>
+            <li><a href={courseAnchor("#syllabus")} className="hover:opacity-70">תוכן הקורס</a></li>
+            <li><a href={courseAnchor("#faq")} className="hover:opacity-70">שאלות נפוצות</a></li>
+            <li><a href={CONSULT_URL} className="hover:opacity-70">{t.consultation_soon}</a></li>
             <li><a href={ISH_ADAMA} className="hover:opacity-70">{t.back_to_ishadama}</a></li>
           </ul>
         </div>
@@ -35,7 +36,7 @@ export default function Footer() {
             צרו קשר
           </h4>
           <ul className="mt-3 space-y-2" style={{ color: "rgba(252, 251, 247, 0.85)" }}>
-            <li><a href="/#lead" className="hover:opacity-70">טופס יצירת קשר</a></li>
+            <li><a href={courseAnchor("#lead")} className="hover:opacity-70">טופס יצירת קשר</a></li>
           </ul>
         </div>
       </div>
